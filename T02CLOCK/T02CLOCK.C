@@ -56,14 +56,18 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     return 0;
   case WM_TIMER:
     Rectangle(hMemDC, 0, 0, w + 1, h + 1);
+    srand(59);
+    for (i = 0; i < 500; i++)
+      DrawEye(hWnd, hMemDC, rand() % 2000, rand() % 1000, 50, 15);
     BitBlt(hMemDC, 10, 1, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCCOPY);
+
     hPen = CreatePen(PS_SOLID, 7, RGB(0, 0, 0));
     hOldPen = SelectObject(hMemDC, hPen);
     GetLocalTime(&st);
     t = st.wSecond / 60.0 * 2 * P + st.wMilliseconds / 1000;
     si = sin(t);
     co = cos(t);
-    PutLineTime(hMemDC, w / 2, h / 2, w / 2 + si * r, h / 2 - co * r);
+    PutLineTime(hMemDC, w /  , h / 2, w / 2 + si * r, h / 2 - co * r);
     t = st.wMinute / 60.0 * 2.0 * P + st.wSecond / 60;
     si = sin(t);
     co = cos(t);
