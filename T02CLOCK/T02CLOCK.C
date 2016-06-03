@@ -6,16 +6,37 @@
 
 #include <windows.h>
 #include <math.h>
+#include <stdlib.h>
 
-/* The start of 'MyWinFunc' function */
+/* The start of drawing eye function */
+VOID DrawEye(HWND hWnd, HDC hDC, INT X, INT Y, INT R, INT R1)
+{
+  POINT pt;
+  INT dx, dy;
+  DOUBLE a;
+  GetCursorPos(&pt);
+  ScreenToClient(hWnd, &pt);
+
+  Ellipse(hDC, X - R, Y - R, X + R, Y + R); 
+  dx = pt.x - X;
+  dy = pt.y - Y;
+  a = (R - R1) / sqrt(dx * dx + dy * dy);
+  if (a < 1)
+  {
+    dx *= a;
+    dy *= a;
+  }
+  Ellipse(hDC, X + dx - R1, Y + dy - R1, X + dx + R1, Y + dy + R1); 
+}/* The end of drawing eye function */
+/* The start of 'PutLinetime' function */
 VOID PutLineTime( HDC hDC, INT X, INT Y, INT X1, INT Y1 )
 {
   MoveToEx(hDC, X, Y, NULL); 
   LineTo(hDC, X1, Y1);
-}
+}/* The end of 'PutLinetime' function */
 LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
-  INT x = 512, y = 512;
+  INT x = 512, y = 512, i;
   SYSTEMTIME st;
   HDC hDC;
   HPEN hPen, hOldPen;
@@ -57,25 +78,24 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
   case WM_TIMER:
     Rectangle(hMemDC, 0, 0, w + 1, h + 1);
     srand(59);
-    for (i = 0; i < 500; i++)
-      DrawEye(hWnd, hMemDC, rand() % 2000, rand() % 1000, 50, 15);
-    BitBlt(hMemDC, 10, 1, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCCOPY);
-
-    hPen = CreatePen(PS_SOLID, 7, RGB(0, 0, 0));
+    
+    BitBlt(hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCCOPY);
+    DrawEye(hWnd, hMemDC, 512, 512, 300, 50);
+    hPen = CreatePen(PS_SOLID, 30, RGB(127, 127, 127));
     hOldPen = SelectObject(hMemDC, hPen);
     GetLocalTime(&st);
-    t = st.wSecond / 60.0 * 2 * P + st.wMilliseconds / 1000;
+    t = (st.wSecond  + st.wMilliseconds / 1000.0 ) / 60.0 * 2 * P;
     si = sin(t);
     co = cos(t);
-    PutLineTime(hMemDC, w /  , h / 2, w / 2 + si * r, h / 2 - co * r);
-    t = st.wMinute / 60.0 * 2.0 * P + st.wSecond / 60;
+    PutLineTime(hMemDC, 512, 512, 512 + si * r, 512 - co * r);
+    t = (st.wMinute + st.wSecond / 60.0) / 60.0 * 2.0 * P + st.wSecond / 60;
     si = sin(t);
     co = cos(t);
-    PutLineTime(hMemDC, w / 2, h / 2, w / 2 + 300 * si, h / 2 - 300 * co);
-    t = st.wHour / 12.0 * 2.0 * P;
+    PutLineTime(hMemDC, 512, 512, 512 + 300 * si, 512 - 300 * co);
+    t = (st.wHour + st.wMinute / 60.0) / 12.0 * 2.0 * P;
     si = sin(t);
     co = cos(t);
-    PutLineTime(hMemDC, w / 2, h / 2, w / 2 + 280 * si, h / 2 - 280 * co);
+    PutLineTime(hMemDC, 512, 512, 512 + 280 * si, 512 - 280 * co);
     SelectObject(hMemDC, hOldPen);
     DeleteObject(hPen);
     InvalidateRect(hWnd, NULL, FALSE);
@@ -95,7 +115,7 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
   return DefWindowProc(hWnd, Msg, wParam, lParam);
 } /* End of 'MyWinFunc' function */
 /* The start of 'WinMain' function */
-INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine, INT ShowCmd )
+INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine, INT ShowCmd )
 {
   MSG msg;
   HWND hWnd;

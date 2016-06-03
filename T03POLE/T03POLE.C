@@ -9,34 +9,42 @@
 #include <stdlib.h>
 
 /* The start of drawing eye function */
-VOID DrawEye(HWND hWnd, HDC hDC, INT X, INT Y, INT R, INT R1)
+/* The start PolygonTriangle function */
+VOID PolygonTriangle( HWND hWnd, HDC hDC, INT X, INT Y )
 {
-  POINT pt;
-  INT dx, dy;
-  DOUBLE a;
+  POINT pt; 
+  static POINT pts[] =
+  {
+    {100, 200}, {50, 350}, {150, 350}
+  }; 
+  POINT pts1[sizeof(pts) / sizeof(pts[0])];
+  INT dx, dy, i;
+  DOUBLE co, si;
   GetCursorPos(&pt);
   ScreenToClient(hWnd, &pt);
 
-  Ellipse(hDC, X - R, Y - R, X + R, Y + R); 
   dx = pt.x - X;
   dy = pt.y - Y;
-  a = (R - R1) /sqrt(dx * dx + dy * dy);
-  if (a < 1)
-  {
-    dx *= a;
-    dy *= a;
+  si = sin((pt.y - Y) / sqrt((pt.y - Y) * (pt.y - Y) + (pt.x - X) * (pt.x - X)));
+  co = cos((pt.x - X) / sqrt((pt.y - Y) * (pt.y - Y) + (pt.x - X) * (pt.x - X)));
+  for (i = 0; i < sizeof(pts) / sizeof(pts[0]); i++)
+  { 
+    pts1[i].x = X + pts[i].x * co - pts[i].y * si;
+    pts1[i].y = Y - (pts[i].x * si - pts[i].y * co);
   }
-  Ellipse(hDC, X + dx - R1, Y + dy - R1, X + dx + R1, Y + dy + R1); 
-}/* The end of drawing eye function */
+
+  Polygon(hDC, pts1, sizeof(pts) / sizeof(pts[0])); 
+ }/* The end PolygonTriangle function */
 /* The start of 'MyWinFunc' function */
 LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
-  INT i;
   HDC hDC;
   PAINTSTRUCT ps;
+
   static INT w, h;
   static HBITMAP hBm;
   static HDC hMemDC;
+  HBRUSH hBr, hOldBr;
 
   switch (Msg)
   {
@@ -60,9 +68,11 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     return 0;
   case WM_TIMER:
     Rectangle(hMemDC, 0, 0, w + 1, h + 1);
-    srand(59);
-    for (i = 0; i < 5000; i++)
-      DrawEye(hWnd, hMemDC, rand() % 2000, rand() % 1000, 50, 15);
+    hBr = CreateSolidBrush(RGB(255, 255, 0));
+    hOldBr = SelectObject(hMemDC, hBr);
+    PolygonTriangle(hWnd, hMemDC, 100, 100);
+    SelectObject(hMemDC, hOldBr);
+    DeleteObject(hBr);
     SetBkMode(hMemDC, TRANSPARENT);
     SetTextColor(hMemDC, RGB(255, 0, 255));
     TextOut(hMemDC, 5, 5, "THE PROGRAMMER IN THE WORLD", 15);
