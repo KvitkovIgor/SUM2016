@@ -8,6 +8,46 @@
 #include <math.h>
 #include <stdlib.h>
 
+VOID FlipFullScreen( HWND hWnd )
+{
+  static BOOL IsFullScreen = FALSE;
+  static RECT SaveRect;
+
+  if (IsFullScreen)
+  {
+    /* restore window size */
+    SetWindowPos(hWnd, HWND_TOP,
+      SaveRect.left, SaveRect.top,
+      SaveRect.right - SaveRect.left, SaveRect.bottom - SaveRect.top,
+      SWP_NOOWNERZORDER);
+  }
+  else
+  {
+    /* Set full screen size to window */
+    HMONITOR hmon;
+    MONITORINFOEX moninfo;
+    RECT rc;
+
+    /* Store window old size */
+    GetWindowRect(hWnd, &SaveRect);
+
+    /* Get nearest monitor */
+    hmon = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+
+    /* Obtain monitor info */
+    moninfo.cbSize = sizeof(moninfo);
+    GetMonitorInfo(hmon, (MONITORINFO *)&moninfo);
+
+    /* Set window new size */
+    rc = moninfo.rcMonitor;
+    AdjustWindowRect(&rc, GetWindowLong(hWnd, GWL_STYLE), FALSE);
+
+    SetWindowPos(hWnd, HWND_TOPMOST,
+      rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top,
+      SWP_NOOWNERZORDER);
+  }
+  IsFullScreen = !IsFullScreen;
+} /* End of 'FlipFullScreen' function */
 /* The start of drawing eye function */
 VOID DrawEye(HWND hWnd, HDC hDC, INT X, INT Y, INT R, INT R1)
 {
@@ -75,12 +115,21 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     return 0;
   case WM_ERASEBKGND:
     return 0;
+  case WM_KEYDOWN:
+    if (LOWORD(wParam) == 'F')
+      FlipFullScreen(hWnd);
+    if (LOWORD(wParam) == VK_ESCAPE)
+      SendMessage(hWnd, WM_DESTROY, 0, 0);
+    return 0;
   case WM_TIMER:
     Rectangle(hMemDC, 0, 0, w + 1, h + 1);
     srand(59);
     
+    
+    for (i = 0; i < 300; i++)
+      DrawEye(hWnd, hMemDC, rand() % 2000, rand() % 1000, 100, 20);
     BitBlt(hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCCOPY);
-    DrawEye(hWnd, hMemDC, 512, 512, 300, 50);
+    DrawEye(hWnd, hMemDC, 512, 512, 370, 50);
     hPen = CreatePen(PS_SOLID, 30, RGB(127, 127, 127));
     hOldPen = SelectObject(hMemDC, hPen);
     GetLocalTime(&st);
