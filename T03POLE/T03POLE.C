@@ -96,18 +96,22 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
   INT i, j;
   HDC hDC;
   PAINTSTRUCT ps;
-
   static INT w, h;
-  static HBITMAP hBm;
-  static HDC hMemDC;
-  HBRUSH hBr, hOldBr;
+  static BITMAP bm;
+  static HBITMAP hBm, hBmLogo;
+  static HDC hMemDC, hMemDCLogo;
 
   switch (Msg)
   {
   case WM_CREATE:
-    SetTimer(hWnd, 30, 10, NULL);
+    SetTimer(hWnd, 30, 2, NULL);
+    hBmLogo = LoadImage(NULL, "M.BMP", IMAGE_BITMAP, 0, 0,
+        LR_LOADFROMFILE);
+    GetObject(hBmLogo, sizeof(bm), &bm);
     hDC = GetDC(hWnd);
     hMemDC = CreateCompatibleDC(hDC);
+    hMemDCLogo = CreateCompatibleDC(hDC);
+    SelectObject(hMemDCLogo, hBmLogo);
     ReleaseDC(hWnd, hDC);
   case WM_SIZE:
     w = LOWORD(lParam);
@@ -122,6 +126,7 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     return 0;
   case WM_ERASEBKGND:
     return 0;
+
   case WM_KEYDOWN:
     if (LOWORD(wParam) == 'F')
       FlipFullScreen(hWnd);
@@ -129,8 +134,9 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
       SendMessage(hWnd, WM_DESTROY, 0, 0);
     return 0;
   case WM_TIMER:
-    Rectangle(hMemDC, 0, 0, w + 1, h + 1);
-    for (i = 0; i < 100; i++)
+    Rectangle(hMemDC, 0, 0, w + 1, h + 1);   
+    BitBlt(hMemDC, 725 + sin(clock() / 600.0) * 650.0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCAND); 
+    for (i = 0; i < 140; i++)
       for (j = 0; j < 60; j++)
         PolygonTriangle(hWnd, hMemDC, 100 + i * 12 , 200 + j * 12);
     SetBkMode(hMemDC, TRANSPARENT);
