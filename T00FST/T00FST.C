@@ -2,7 +2,6 @@
 
 LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
-  INT i;
   HDC hDC;
   PAINTSTRUCT ps;
   POINT pt;

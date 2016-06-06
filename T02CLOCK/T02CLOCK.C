@@ -127,7 +127,7 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     
     
     for (i = 0; i < 300; i++)
-      DrawEye(hWnd, hMemDC, rand() % 2000, rand() % 1000, 100, 20);
+      DrawEye(hWnd, hMemDC, rand() % 2000, rand() % 1000, 100, 50);
     BitBlt(hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCCOPY);
     DrawEye(hWnd, hMemDC, 512, 512, 370, 50);
     hPen = CreatePen(PS_SOLID, 30, RGB(127, 127, 127));
@@ -142,6 +142,7 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     co = cos(t);
     PutLineTime(hMemDC, 512, 512, 512 + 300 * si, 512 - 300 * co);
     t = (st.wHour + st.wMinute / 60.0) / 12.0 * 2.0 * P;
+
     si = sin(t);
     co = cos(t);
     PutLineTime(hMemDC, 512, 512, 512 + 280 * si, 512 - 280 * co);
