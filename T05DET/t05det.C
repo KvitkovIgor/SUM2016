@@ -37,9 +37,8 @@ void LoadMatrix( char *FileName )
 }
 void Go( int Pos )
 {
-  int i, prod = 1;
+  int i, prod = 1, SaveParity;
   double x;
-  int SaveParity;
   
   if (Pos == N)
   {                           
@@ -83,8 +82,6 @@ double EvalDeterminat( char *FileName )
 }
 void main( void ) 
 {
-  char *c[] = {"m3.txt"};
-  printf("DET = %lf\n", EvalDeterminat(*c));
-  Go(0);
+  printf("DET = %f\n", EvalDeterminat("m3.txt"));
   _getch();
 }

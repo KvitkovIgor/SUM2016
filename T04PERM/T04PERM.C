@@ -28,9 +28,9 @@ void SavePerm( void )
     fprintf(F, "%2i,", P[i]);
   fprintf(F, "%2i", P[N - 1]);
   if (Parity)
-    fprintf(F, " - even\n");
-  else 
     fprintf(F, " - odd\n");
+  else 
+    fprintf(F, " - even\n");
   fclose(F);
 }
 void Go( int Pos )
@@ -46,11 +46,11 @@ void Go( int Pos )
   {
     for (i = Pos; i < N; i++)
     {
-      Swap(&P[Pos], &P[i]);
-      if (P[Pos] > P[i])
-        Parity = !Parity;
+      if (Pos != i)
+        Swap(&P[Pos], &P[i]), Parity = !Parity;
       Go(Pos + 1);
-      Swap(&P[Pos], &P[i]);
+      if (Pos != i)
+        Swap(&P[Pos], &P[i]), Parity = !Parity;
     }
   } 
 }

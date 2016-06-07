@@ -1,13 +1,9 @@
-/* FILE NAME: T01EYES.C
+/* FILE NAME: T06SPHR.C
  * PROGRAMMER: IK3
  * DATE: 02.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */
-
-#include <windows.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
+#include "sphr.h"
 
 VOID FlipFullScreen( HWND hWnd )
 {
@@ -49,51 +45,9 @@ VOID FlipFullScreen( HWND hWnd )
   }
   IsFullScreen = !IsFullScreen;
 } /* End of 'FlipFullScreen' function */
-/* The start PolygonTriangle function */
-VOID PolygonTriangle( HWND hWnd, HDC hDC, INT X, INT Y )
-{
-  POINT pt; 
-  static POINT pts[] =
-  {
-    {0, -20}, {40, 0}, {0, 20}
-  },
-  pts1[] =
-  {
-     {0, 20}, {-40, 0}, {0, -20}
-  };
-  POINT pts2[sizeof(pts) / sizeof(pts[0])], pts3[sizeof(pts1) / sizeof(pts1[0])];
-  INT i;
-  DOUBLE co, si;
-  GetCursorPos(&pt);
-  ScreenToClient(hWnd, &pt);
-                                                                                  
-  si = (Y - pt.y) / sqrt((Y - pt.y) * (Y - pt.y) + (pt.x - X ) * (pt.x - X));
-  co = (pt.x - X) / sqrt((Y - pt.y) * (Y - pt.y) + (pt.x - X ) * (pt.x - X));
-                                      
-  for (i = 0; i < sizeof(pts) / sizeof(pts[0]); i++)
-  { 
-    pts2[i].x = X + pts[i].x * co - pts[i].y * si;
-    pts2[i].y = Y - (pts[i].x * si + pts[i].y * co);
-    pts3[i].x = X + pts1[i].x * co - pts1[i].y * si;
-    pts3[i].y = Y - (pts1[i].x * si + pts1[i].y * co);
-  }
-  SelectObject(hDC, GetStockObject(DC_PEN));
-  SelectObject(hDC, GetStockObject(DC_BRUSH));
-
-  srand(clock() / 1000);
-  SetDCPenColor(hDC, RGB(0, 0, 0));
-  SetDCBrushColor(hDC, RGB(rand() * 5, rand()  / 500, rand() * 3));
-  Polygon(hDC, pts2, sizeof(pts) / sizeof(pts[0]));
-  SetDCPenColor(hDC, RGB(0, 0, 0));
-  SetDCBrushColor(hDC, RGB(rand() /50, rand() * 80 / 1000, rand() * 3));
-  Polygon(hDC, pts3, sizeof(pts1) / sizeof(pts1[0])); 
-  SetDCPenColor(hDC, RGB(255, 255, 255));
-  SetDCBrushColor(hDC, RGB(255, 255, 255));
- }/* The end PolygonTriangle function */
 /* The start of 'MyWinFunc' function */
 LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
-  INT i, j;
   HDC hDC;
   PAINTSTRUCT ps;
   static INT w, h;
@@ -135,10 +89,8 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     return 0;
   case WM_TIMER:
     Rectangle(hMemDC, 0, 0, w + 1, h + 1);   
-    BitBlt(hMemDC, 725 + sin(clock() / 600.0) * 650.0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCAND); 
-    for (i = 0; i < 150; i++)
-      for (j = 0; j < 60; j++)
-        PolygonTriangle(hWnd, hMemDC, 100 + i * 12, 200 + j * 12);
+    BitBlt(hMemDC, 725 + sin(clock() / 600.0) * 650.0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCAND);
+    DrawSphere( hMemDC, w / 2, h / 2);
     SetBkMode(hMemDC, TRANSPARENT);
     SetTextColor(hMemDC, RGB(255, 0, 255));
     TextOut(hMemDC, 5, 5, "THE PROGRAMMER IN THE WORLD", 15);
