@@ -1,3 +1,8 @@
+/* FILE NAME: T00FST.C
+ * PROGRAMMER: IK3
+ * DATE: 01.06.2016
+ * PURPOSE: WinAPI windowed applictaion sample
+ */
 #include <windows.h>
 
 LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )

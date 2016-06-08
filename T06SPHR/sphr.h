@@ -1,6 +1,6 @@
 /* FILE NAME: SPHR.H
  * PROGRAMMER: IK3
- * DATE: 02.06.2016
+ * DATE: 08.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */
 
@@ -16,6 +16,6 @@
 #define pi 3.14159265358979323846
 
 
-VOID DrawSphere( HDC hDC, INT X, INT Y );
+VOID DrawSphere( HDC hDC, INT X, INT Y, INT R);
 
 #endif 

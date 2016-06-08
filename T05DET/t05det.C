@@ -1,6 +1,6 @@
 /* FILE NAME: T04CLOCK.C
  * PROGRAMMER: IK3
- * DATE: 02.06.2016
+ * DATE: 07.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */
 

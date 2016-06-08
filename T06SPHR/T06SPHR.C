@@ -1,6 +1,6 @@
 /* FILE NAME: T06SPHR.C
  * PROGRAMMER: IK3
- * DATE: 02.06.2016
+ * DATE: 08.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */
 #include "sphr.h"
@@ -88,9 +88,9 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
       SendMessage(hWnd, WM_DESTROY, 0, 0);
     return 0;
   case WM_TIMER:
-    Rectangle(hMemDC, 0, 0, w + 1, h + 1);   
-    BitBlt(hMemDC, 725 + sin(clock() / 600.0) * 650.0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCAND);
-    DrawSphere( hMemDC, w / 2, h / 2);
+    Rectangle(hMemDC, 0, 0, w + 1, h + 1);    
+    DrawSphere( hMemDC, w / 2 + sin(clock() / 600.0) * 450.0, h / 2, 256);
+    BitBlt(hMemDC, 725 + sin(clock() / 600.0) * 650.0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCAND);  
     SetBkMode(hMemDC, TRANSPARENT);
     SetTextColor(hMemDC, RGB(255, 0, 255));
     TextOut(hMemDC, 5, 5, "THE PROGRAMMER IN THE WORLD", 15);
@@ -129,7 +129,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine, 
   wc.lpfnWndProc = MyWinFunc;
 
   RegisterClass(&wc);
-  hWnd = CreateWindow("My Window Class", "THE CGSG PROGA", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, 1000, 1900, NULL, NULL, hInstance, NULL);
+  hWnd = CreateWindow("My Window Class", "THE CGSG PROGA", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, 1080, 1920, NULL, NULL, hInstance, NULL);
   ShowWindow(hWnd, ShowCmd);
 
   while (GetMessage(&msg, NULL, 0, 0))
