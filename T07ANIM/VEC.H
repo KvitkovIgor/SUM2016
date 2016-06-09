@@ -40,15 +40,22 @@ __inline VEC VecAddVec( VEC A, VEC B )
   return VecSet(A.X + B.X, A.Y + B.Y, A.Z + B.Z);
 }/* The end of 'VecAddVec' function */
 
-__inline VEC VecSubVec( VEC A, VEC B );
-
-__inline VEC VecMulNum( VEC A, DBL N );
-__inline VEC VecDivNum( VEC A, DBL N );
-
+__inline VEC VecSubVec( VEC A, VEC B )
+{
+  return VecSet(A.X - B.X, A.Y - B.Y, A.Z - B.Z);
+}
+__inline VEC VecMulNum( VEC A, DBL N )
+{
+  return VecSet(A.X * N, A.Y * N, A.Z * N);
+}
+__inline VEC VecDivNum( VEC A, DBL N )
+{
+  return VecSet(A.X / N, A.Y / N, A.Z / N);
+}
 /* The start of 'VecNeg' function */
 __inline VEC VecNeg( VEC A )
 {
-  return VecSet(-A.X, -A.Y, -A.Z);
+  return VecSet(-A.X, -A.Y, -A.Z)
 }/* The end of 'VecNeg' function */
 
 /* The start of 'VecDotVec' function */
@@ -57,9 +64,18 @@ __inline DBL VecDotVec( VEC A, VEC B )
   return A.X * B.X + A.Y * B.Y + A.Z * B.Z;
 } /* End of 'VecDotVec' function */
                                                                                                                   
-__inline VEC VecCrossVec( VEC A, VEC B );
-__inline DBL VecLen2( VEC V );
-__inline DBL VecLen( VEC V );
+__inline VEC VecCrossVec( VEC A, VEC B )
+{                                       
+  return VecSet(A.Y * B.Z - A.Z * B.Y, A.Y * B.X - A.X* B.Z, A.X * B.Z - A.Z * B.X);
+}
+__inline DBL VecLen2( VEC V )
+{
+  return V.X * V.X + V.Y * V.Y + V.Z * V.Z;
+}
+__inline DBL VecLen( VEC V )
+{
+  return sqrt(V.X * V.X  + V.Y * V.Y + V.Z * V.Z);
+}
 __inline VEC VecNormalize( VEC V )
 {
   DBL len = VecDotVec(V, V);
@@ -81,7 +97,9 @@ __inline VEC PointTransform( VEC V, MATR M )
   return VecSet(
     V.X * M.A[0][0] + V.Y * M.A[1][0] + V.Z * M.A[2][0] + M.A[3][0],
     V.X * M.A[0][1] + V.Y * M.A[1][1] + V.Z * M.A[2][1] + M.A[3][1],
-    V.X * M.A[0][2] + V.Y * M.A[1][2] + V.Z * M.A[2][2] + M.A[3][2]);
+    V.X * M.A[0][2] + V.Y * M.A[
+      
+      1][2] + V.Z * M.A[2][2] + M.A[3][2]);
 }/* The end of 'PointTransform' function */
 
 /* The start of 'VectorTransform' function */
@@ -121,11 +139,64 @@ __inline MATR MatrTranslate( VEC D )
   return M;
 } /* The end of 'MatrTranslate' function */
 
+/* The start of 'MatrRotateX' function */
 MATR MatrScale( VEC S );
-MATR MatrRotateX( DBL AngleDegree );
-MATR MatrRotateY( DBL AngleDegree );
-MATR MatrRotateZ( DBL AngleDegree );
-
+{
+  MATR M =
+  {
+    {
+      {  S.X,     0,     0,  0},
+      {    0,   S.Y,     0,  0},
+      {    0,     0,   S.Z,  0},
+      {    0,     0,     0,  1},
+    }
+  };
+}/* The start of 'MatrRotateX' function */
+/* The start of 'MatrRotateX' function */
+MATR MatrRotateX( DBL AngleDegree )
+{
+  DBL A = D2R(AngleDegree);
+  MATR M =
+  {
+    {
+      {  1,       0,       0,   0},
+      {  0,  cos(A),   sin(A),  0},
+      {  0, -sin(A),   cos(A),  0},
+      {  0,       0,       0,   1},
+    }
+  };
+  return M;
+} /* The end of 'MatrRotateX' function */
+/* The start of 'MatrRotateY' function */
+MATR MatrRotateY( DBL AngleDegree )
+{
+  DBL A = D2R(AngleDegree);
+  MATR M =
+  {
+    {
+      {  cos(A), 0, -sin(A), 0},
+      {       0, 1,       0, 0},
+      {  sin(A), 0,  cos(A), 0},
+      {       0, 0,       0, 1},
+    }
+  };
+  return M;
+} /* The end of 'MatrRotateY' function */
+/* The start of 'MatrRotateZ' function */
+MATR MatrRotateZ( DBL AngleDegree )
+{
+  DBL A = D2R(AngleDegree);
+  MATR M =
+  {
+    {
+      {  cos(A), 0, sin(A), 0},
+      { -sin(A), 1, cos(A), 0},
+      {       0, 0,      0, 0},
+      {       0, 0,      0, 1},
+    }
+  };
+  return M;
+} /* The end of 'MatrRotateZ' function */
 /* The start of 'MatrRotate' function */
 __inline MATR MatrRotate( DBL AngleDegree, VEC R )
 {
@@ -174,8 +245,18 @@ __inline MATR MatrMulMatr( MATR M1, MATR M2 )
 }/* The end of 'MatrMulMatr' function */
 
 /* The start of 'MatrTranspose' function */
-MATR MatrTranspose( MATR M );
+__inline MATR MatrTransponse( MATR M)
+{
+  INT i, j;
+  MATR r;
 
+  for (i = 0; i < 4; i++)
+    for (j = 0; j < 4; j++)
+      r.A[i][j] = M.A[i][j];
+  
+  return r;
+}/* The end of 'MatrTranspose' function */
+/* The start of 'MatrDeterm3x3' function */
 __inline DBL MatrDeterm3x3( DBL A11, DBL A12, DBL A13,
                    DBL A21, DBL A22, DBL A23,
                    DBL A31, DBL A32, DBL A33 )

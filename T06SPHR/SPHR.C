@@ -4,13 +4,13 @@
  * PURPOSE: WinAPI windowed applictaion sample
  */
 #include "sphr.h"
-#define M 150
-#define N 300
+#define M 50
+#define N 100
 
 typedef double DBL;
 
 typedef struct
-{
+{          
   DBL X, Y, Z;
 } VEC;
 
@@ -115,7 +115,7 @@ VOID LoadSphere( VOID )
 
   /* Load image from file */
   hMemDC = CreateCompatibleDC(hDC);
-  hBm = LoadImage(NULL, "Q.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+  hBm = LoadImage(NULL, "O.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
   GetObject(hBm, sizeof(bm), &bm);
   Globe.W = bm.bmWidth;
   Globe.H = bm.bmHeight;
