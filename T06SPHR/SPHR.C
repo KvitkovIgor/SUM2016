@@ -4,8 +4,8 @@
  * PURPOSE: WinAPI windowed applictaion sample
  */
 #include "sphr.h"
-#define M 50
-#define N 100
+#define M 300
+#define N 600
 
 typedef double DBL;
 
@@ -115,7 +115,7 @@ VOID LoadSphere( VOID )
 
   /* Load image from file */
   hMemDC = CreateCompatibleDC(hDC);
-  hBm = LoadImage(NULL, "O.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+  hBm = LoadImage(NULL, "E.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
   GetObject(hBm, sizeof(bm), &bm);
   Globe.W = bm.bmWidth;
   Globe.H = bm.bmHeight;
@@ -246,9 +246,9 @@ VOID DrawSphere( HDC hDC, INT Xc, INT Yc, INT R )
       SelectObject(hDC, GetStockObject(DC_PEN));
       SelectObject(hDC, GetStockObject(DC_BRUSH));
 
-      SetDCPenColor(hDC, c);
-      SetDCBrushColor(hDC, c);
-      p0 = pts[i][j];
+      SetDCPenColor(hDC, c);                  
+      SetDCBrushColor(hDC, c);                                                                
+      p0 = pts[i][j];                                                                             
       p3 = pts[i + 1][j];
       p1 = pts[i][j + 1];
       p2 = pts[i + 1][j + 1];

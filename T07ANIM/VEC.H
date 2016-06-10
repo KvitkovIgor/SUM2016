@@ -12,7 +12,8 @@
 #define D2R(A) ((A) * PI / 180.0)
 
 /* базовый вещественный тип */
-typedef double DBL;
+typedef DOUBLE DBL;
+typedef FLOAT FLT;
 
 /* тип для вектора в простанстве */
 typedef struct tagVEC
@@ -55,7 +56,7 @@ __inline VEC VecDivNum( VEC A, DBL N )
 /* The start of 'VecNeg' function */
 __inline VEC VecNeg( VEC A )
 {
-  return VecSet(-A.X, -A.Y, -A.Z)
+  return VecSet(-A.X, -A.Y, -A.Z);
 }/* The end of 'VecNeg' function */
 
 /* The start of 'VecDotVec' function */
@@ -84,13 +85,6 @@ __inline VEC VecNormalize( VEC V )
     len = sqrt(len), V.X /= len, V.Y /= len, V.Z /= len;
   return V;
 }
-
-/* The start of 'VecDotVec' function */
-__inline VEC VecDotVec( VEC A, VEC B )
-{
-  return A.X * B.X + A.Y * B.Y + A.Z * B.Z);
-}/* The end of 'VecDotVec' function */
-
 /* The start of 'PointTransform' function */
 __inline VEC PointTransform( VEC V, MATR M )
 {
@@ -140,7 +134,7 @@ __inline MATR MatrTranslate( VEC D )
 } /* The end of 'MatrTranslate' function */
 
 /* The start of 'MatrRotateX' function */
-MATR MatrScale( VEC S );
+__inline MATR MatrScale( VEC S )
 {
   MATR M =
   {
@@ -151,10 +145,12 @@ MATR MatrScale( VEC S );
       {    0,     0,     0,  1},
     }
   };
-}/* The start of 'MatrRotateX' function */
+  return M;
+}
 /* The start of 'MatrRotateX' function */
-MATR MatrRotateX( DBL AngleDegree )
-{
+/* The start of 'MatrRotateX' function */
+__inline MATR MatrRotateX( DBL AngleDegree )
+{        
   DBL A = D2R(AngleDegree);
   MATR M =
   {
@@ -168,7 +164,7 @@ MATR MatrRotateX( DBL AngleDegree )
   return M;
 } /* The end of 'MatrRotateX' function */
 /* The start of 'MatrRotateY' function */
-MATR MatrRotateY( DBL AngleDegree )
+__inline MATR MatrRotateY( DBL AngleDegree )
 {
   DBL A = D2R(AngleDegree);
   MATR M =
@@ -183,8 +179,8 @@ MATR MatrRotateY( DBL AngleDegree )
   return M;
 } /* The end of 'MatrRotateY' function */
 /* The start of 'MatrRotateZ' function */
-MATR MatrRotateZ( DBL AngleDegree )
-{
+__inline MATR MatrRotateZ( DBL AngleDegree )
+{        
   DBL A = D2R(AngleDegree);
   MATR M =
   {
@@ -200,7 +196,7 @@ MATR MatrRotateZ( DBL AngleDegree )
 /* The start of 'MatrRotate' function */
 __inline MATR MatrRotate( DBL AngleDegree, VEC R )
 {
-  DBL A = D2R(AngleToDegree), si = sin(A), co = cos(A);
+  DBL A = D2R(AngleDegree), si = sin(A), co = cos(A);
   VEC V = VecNormalize(R);
   MATR M =
   {
@@ -235,7 +231,7 @@ __inline MATR MatrIdentity( VOID )
 __inline MATR MatrMulMatr( MATR M1, MATR M2 )
 {        
   MATR r;
-  int i, j
+  int i, j, k;
 
   for (i = 0; i < 4; i++)
     for (j = 0; j < 4; j++)
@@ -243,6 +239,20 @@ __inline MATR MatrMulMatr( MATR M1, MATR M2 )
         r.A[i][j] += M1.A[i][k] * M2.A[k][j];
   return r;
 }/* The end of 'MatrMulMatr' function */
+__inline DBL Rnd0( VOID )
+{
+  return (DBL)rand() / RAND_MAX;
+} /* End of 'Rnd0' function */
+
+/* Random number obtain in range [-1.0 .. 1.0] function.
+ * ARGUMENTS: None.
+ * RETURNS:
+ *   (DBL) result random number.
+ */
+__inline DBL Rnd1( VOID )
+{
+  return 2.0 * rand() / RAND_MAX - 1;
+} /* End of 'Rnd1' function */
 
 /* The start of 'MatrTranspose' function */
 __inline MATR MatrTransponse( MATR M)
