@@ -3,36 +3,85 @@
  * DATE: 08.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */ 
-#include "anim.h"
-#include "untis.h"
-#include <time.h>
 
-#include <mmsystem.h> 
+#include <stdio.h>
+#include "anim.h"
+#include <mmsystem.h>
+
 #pragma comment(lib, "winmm")
-#define IK3_GET_JOYSTIC_AXIS(A)\
+
+#define IK3_GET_JOYSTIC_AXIS(A) \
   (2.0 * (ji.dw##A##pos - jc.w##A##min) / (jc.w##A##max - jc.w##A##min - 1) - 1)
 
+INT IK3_MouseWheel;
+
 ik3Anim IK3_Anim;
-HDC hMemDClogo;
 
-VOID IK3_AnimInit( HWND hWnd )
+static UINT64
+  IK3_StartTime, 
+  IK3_OldTime, 
+  IK3_OldTimeFPS, 
+  IK3_PauseTime, 
+  IK3_TimePerSec, 
+  IK3_FrameCounter;
+
+VOID IK3_AnimUnit( HWND hWnd )
 {
-  HDC hDC;
-  static HBITMAP hBmLogo;
-  static BITMAP bm;
+  HDC hDC; 
+  LARGE_INTEGER t;
 
-  hBmLogo = LoadImage(NULL, "N.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-  GetObject(hBmLogo, sizeof(bm), &bm);
-  hDC = GetDC(hWnd);
-  IK3_Anim.hDC = CreateCompatibleDC(hDC);
-  hMemDClogo = CreateCompatibleDC(hDC);    
-  IK3_Anim.NumOfUnits = 0, memset(&IK3_Anim, 0, sizeof(ik3Anim));
+  memset(&IK3_Anim, 0, sizeof(ik3Anim));
+
   IK3_Anim.hWnd = hWnd;
+  hDC  = GetDC(hWnd);
   IK3_Anim.hDC = CreateCompatibleDC(hDC);
-  SelectObject(hMemDClogo, hBmLogo);
   ReleaseDC(hWnd, hDC);
-
+  QueryPerformanceFrequency(&t);
+  IK3_TimePerSec = t.QuadPart;
+  QueryPerformanceCounter(&t);
+  IK3_StartTime = IK3_OldTime = IK3_OldTimeFPS = t.QuadPart;
+  IK3_PauseTime = 0;
 }
+VOID IK3_AnimFlipFullScreen( VOID )
+{
+  static BOOL IsFullScreen = FALSE;
+  static RECT SaveRect;
+
+  if (IsFullScreen)
+  {
+    /* restore window size */
+    SetWindowPos(IK3_Anim.hWnd, HWND_TOP,
+      SaveRect.left, SaveRect.top,
+      SaveRect.right - SaveRect.left, SaveRect.bottom - SaveRect.top,
+      SWP_NOOWNERZORDER);
+  }
+  else
+  {
+    /* Set full screen size to window */
+    HMONITOR hmon;
+    MONITORINFOEX moninfo;
+    RECT rc;
+
+    /* Store window old size */
+    GetWindowRect(IK3_Anim.hWnd, &SaveRect);
+
+    /* Get nearest monitor */
+    hmon = MonitorFromWindow(IK3_Anim.hWnd, MONITOR_DEFAULTTONEAREST);
+
+    /* Obtain monitor info */
+    moninfo.cbSize = sizeof(moninfo);
+    GetMonitorInfo(hmon, (MONITORINFO *)&moninfo);
+
+    /* Set window new size */
+    rc = moninfo.rcMonitor;
+    AdjustWindowRect(&rc, GetWindowLong(IK3_Anim.hWnd, GWL_STYLE), FALSE);
+
+    SetWindowPos(IK3_Anim.hWnd, HWND_TOPMOST,
+      rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top,
+      SWP_NOOWNERZORDER);
+  }
+  IsFullScreen = !IsFullScreen;
+} /* End of 'FlipFullScreen' function */
 VOID IK3_Reasize( INT W, INT H )
 {
   HDC hDC;
@@ -76,16 +125,57 @@ VOID IK3_AnimClose( VOID )
   DeleteObject(IK3_Anim.hFrame);
   IK3_Anim.NumOfUnits = 0;
 }
-/* The start of 'PutLinetime' function */
-VOID PutLineTime( HDC hDC, INT X, INT Y, INT X1, INT Y1 )
-{
-  MoveToEx(hDC, X, Y, NULL); 
-  LineTo(hDC, X1, Y1);
-}/* The end of 'PutLinetime' function */
 VOID IK3_AnimRender( VOID )
 {
-  int i; 
-  
+  int i;
+  POINT pt;
+  LARGE_INTEGER t;
+
+  IK3_FrameCounter++;
+  QueryPerformanceCounter(&t);
+
+  IK3_Anim.GlobalTime =(DBL)(t.QuadPart - IK3_StartTime) / IK3_TimePerSec;
+  IK3_Anim.GlobalDeltaTime =(DBL)(t.QuadPart - IK3_OldTime) / IK3_TimePerSec;
+  if (IK3_Anim.IsPause)
+  {
+    IK3_Anim.DeltaTime = 0;
+    IK3_PauseTime += t.QuadPart - IK3_OldTime;
+  }
+  else 
+  {
+    IK3_Anim.DeltaTime = IK3_Anim.GlobalDeltaTime;
+    IK3_Anim.Time = (DBL)(t.QuadPart - IK3_PauseTime - IK3_OldTime) / IK3_TimePerSec;
+  }
+
+  if (t.QuadPart - IK3_OldTimeFPS > IK3_TimePerSec);
+  {
+    CHAR str[100];
+
+    IK3_Anim.FPS = IK3_FrameCounter * IK3_TimePerSec / (DBL)(t.QuadPart - IK3_OldTimeFPS);
+    IK3_OldTimeFPS = t.QuadPart;
+    sprintf(str, "FPS: %.5f", IK3_Anim.FPS);
+    SetWindowText(IK3_Anim.hWnd, str);
+    IK3_FrameCounter = 0;
+  }
+
+  GetKeyboardState(IK3_Anim.Keys);
+  for (i = 0; i < 256; i++)
+  {
+    IK3_Anim.Keys[i] >>= 7;
+    if (!IK3_Anim.OldKeys[i] && IK3_Anim.Keys[i])
+      IK3_Anim.KeysClick[i] = TRUE;
+    else
+      IK3_Anim.KeysClick[i] = FALSE;
+  }
+  memcpy(IK3_Anim.OldKeys, IK3_Anim.Keys, 256);
+
+  GetCursorPos(&pt);
+  ScreenToClient(IK3_Anim.hWnd, &pt);
+  IK3_Anim.Mdx = pt.x - IK3_Anim.Mx;
+  IK3_Anim.Mdy = pt.y - IK3_Anim.My;
+  IK3_Anim.Mdx = pt.x;
+  IK3_Anim.Mdy = pt.y;
+
   /* Joystick */
 
   if (joyGetNumDevs() > 0)
@@ -117,21 +207,29 @@ VOID IK3_AnimRender( VOID )
     }
   }
 
+  
+  
   for (i = 0; i < IK3_Anim.NumOfUnits; i++)
     IK3_Anim.Units[i]->Response(IK3_Anim.Units[i], &IK3_Anim);
 
   
   SelectObject(IK3_Anim.hDC, GetStockObject(NULL_PEN));
   SelectObject(IK3_Anim.hDC, GetStockObject(DC_BRUSH));
-  SetDCBrushColor(IK3_Anim.hDC, RGB(255, 255, 255)); 
+  SetDCBrushColor(IK3_Anim.hDC, RGB(100, 155, 210)); 
   Rectangle(IK3_Anim.hDC, 0, 0, IK3_Anim.W, IK3_Anim.H);
   
-  DrawSphere( IK3_Anim.hDC, 1000 + IK3_Anim.JX * 700, 512 + IK3_Anim.JY * 700, 100);
-  BitBlt(IK3_Anim.hDC, 1500, 0, IK3_Anim.W, IK3_Anim.H, hMemDClogo, 0, 0, SRCAND); 
-
   for (i = 0; i < IK3_Anim.NumOfUnits; i++)
   {
+    SelectObject(IK3_Anim.hDC, GetStockObject(DC_PEN));
+    SelectObject(IK3_Anim.hDC, GetStockObject(DC_BRUSH));
+    SetDCBrushColor(IK3_Anim.hDC, RGB(255, 255, 255));
+    SetDCPenColor(IK3_Anim.hDC, RGB(0, 0, 0));
+
     IK3_Anim.Units[i]->Render(IK3_Anim.Units[i], &IK3_Anim);
   }
 }
+
+
+
+
 

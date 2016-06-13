@@ -71,7 +71,7 @@ static VOID IK3_UnitRender( ik3UNIT_BALL *Uni, ik3Anim *Ani )
  * RETURNS:
  *   (vg4UNIT *) pointer to created unit.
  */
-ik3UNIT * ik3_UnitCreateBall( VOID )
+ik3UNIT * IK3_UnitCreateBall( VOID )
 {
   ik3UNIT_BALL *Uni;
 
