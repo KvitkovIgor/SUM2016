@@ -1,3 +1,9 @@
+/* FILE NAME: U_BALL.C
+ * PROGRAMMER: IK3
+ * DATE: 11.06.2016
+ * PURPOSE: Ball unit sample.
+ */
+
 #ifndef __ANIM_H_
 #define __ANIM_H_
 
@@ -10,11 +16,15 @@ typedef struct tagik3UNIT ik3UNIT;
 typedef struct tagik3Anim
 {
   HWND hWnd;
-  HDC hDC;  
+  HDC hDC;
   INT W, H;  
   HBITMAP hFrame;
   ik3UNIT *Units[MAX_UNITS];
   INT NumOfUnits;
+  BYTE
+  JBut[32];                    /* Joystick button state */
+  INT JPov;                      /* Joystick point-of-view control [0,1..8] */
+  DBL JX, JY, JZ, JR; 
 } ik3Anim;
 struct tagik3UNIT
 {

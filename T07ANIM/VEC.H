@@ -147,7 +147,19 @@ __inline MATR MatrScale( VEC S )
   };
   return M;
 }
-/* The start of 'MatrRotateX' function */
+__inline MATR MatrFrustum( DBL l, DBL r, DBL b, DBL t, DBL n, DBL f )
+{
+  MATR M = 
+  {
+    {
+      {  2 * n / (r - l),                 0,                    0,  0},
+      {                0,   2 * n / (t - b),                    0,  0},
+      {(r + l) / (r - l), (t + b) / (t - b),   -(f + n) / (f - n), -1},
+      {                0,                 0, -2 * n * f / (f - n),  0}
+    }
+  };
+  return M;
+}
 /* The start of 'MatrRotateX' function */
 __inline MATR MatrRotateX( DBL AngleDegree )
 {        
@@ -229,7 +241,7 @@ __inline MATR MatrIdentity( VOID )
 
 /* The start of 'MatrMulMatr' function */
 __inline MATR MatrMulMatr( MATR M1, MATR M2 )
-{        
+{
   MATR r;
   int i, j, k;
 

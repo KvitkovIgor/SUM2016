@@ -1,6 +1,6 @@
 /* FILE NAME: U_BALL.C
- * PROGRAMMER: VG4
- * DATE: 10.06.2016
+ * PROGRAMMER: IK3
+ * DATE: 11.06.2016
  * PURPOSE: Ball unit sample.
  */
 

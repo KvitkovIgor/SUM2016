@@ -1,6 +1,6 @@
-/* FILE NAME: VEC.H
+/* FILE NAME: DEF.H
  * PROGRAMMER: IK3
- * DATE: 08.06.2016
+ * DATE: 11.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */
 #ifndef __DEF_H_
@@ -23,4 +23,6 @@
 
 #include "vec.h"
 
+typedef __int64 INT64;
+typedef unsigned __int64 UINT64;
 #endif /* __DEF_H_ */
