@@ -10,5 +10,6 @@
 
 ik3UNIT * IK3_UnitCreateBall( VOID );
 ik3UNIT * IK3_UnitCreateClock( VOID );
+ik3UNIT * IK3_UnitCreateCube( VOID );
 
 #endif 

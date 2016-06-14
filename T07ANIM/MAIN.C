@@ -58,6 +58,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine, 
   HWND hWnd;
   WNDCLASS wc;
 
+
   wc.style = CS_HREDRAW | CS_VREDRAW;
   wc.cbClsExtra = 0;
   wc.cbWndExtra = 0;
@@ -70,9 +71,10 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine, 
   wc.lpfnWndProc = MyWinFunc;
 
   RegisterClass(&wc);
-  hWnd = CreateWindow("My Window Class", "THE CGSG PROGA", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, 500, 1000, NULL, NULL, hInstance, NULL);
+  hWnd = CreateWindow("My Window Class", "THE CGSG PROGA", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, 1000, 1920, NULL, NULL, hInstance, NULL);
   ShowWindow(hWnd, ShowCmd);
 
+  IK3_AnimAddUnit(IK3_UnitCreateCube());
   while (GetMessage(&msg, NULL, 0, 0))
     DispatchMessage(&msg);
   

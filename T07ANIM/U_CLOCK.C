@@ -16,12 +16,9 @@ typedef struct
 static VOID IK3_UnitInit( ik3UNIT_CLOCK *Uni, ik3Anim *Ani )
 {
 }
-static VOID IK3_UnitResponse( ik3UNIT_CLOCK *Uni, ik3Anim *Ani )
+static VOID IK3_UnitResponse( ik3PRIM *Uni, ik3Anim *Ani )
 {
-  if (Ani->KeysClick[VK_SPACE])
-    IK3_AnimAddUnit(IK3_UnitCreateBall());
-  if (Ani->KeysClick[VK_RETURN])
-    IK3_AnimFlipFullScreen();
+  
   if (Ani->KeysClick[VK_ESCAPE])
     IK3_AnimDoExit();
 }

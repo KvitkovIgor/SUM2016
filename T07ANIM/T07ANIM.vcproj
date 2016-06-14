@@ -183,11 +183,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LOADPRIM.C"
+				>
+			</File>
+			<File
 				RelativePath=".\MAIN.C"
 				>
 			</File>
 			<File
+				RelativePath=".\RENDER.H"
+				>
+			</File>
+			<File
 				RelativePath=".\U_CLOCK.C"
+				>
+			</File>
+			<File
+				RelativePath=".\U_CUBE.C"
 				>
 			</File>
 			<File
@@ -199,10 +211,6 @@
 				>
 				<File
 					RelativePath=".\RENDER.C"
-					>
-				</File>
-				<File
-					RelativePath=".\RENDER.H"
 					>
 				</File>
 			</Filter>

@@ -1,14 +1,13 @@
-/* FILE NAME: RENDER.H
+/* FILENAME: RENDER.H
  * PROGRAMMER: IK3
- * DATE: 11.06.2016
- * PURPOSE: WinAPI windowed applictaion sample
- */
-/* Primitive representation type */
+ * DATE: 13.06.2016
+ * PURPOSE: Animation system difinitions
+*/
+
 #ifndef __RENDER_H_
 #define __RENDER_H_
 
-#include "anim.h"
-
+/* Primitive representation type */
 typedef struct
 {
   VEC *P;          /* Primitive points array */
@@ -17,37 +16,16 @@ typedef struct
   INT NumOfE;      /* Edges array size */
 } ik3PRIM;
 
-VEC CubeP[] =
-{
-  {-1, -1,  1},
-  { 1, -1,  1},
-  { 1, -1, -1},
-  {-1, -1, -1},
-  {-1,  1,  1},
-  { 1,  1,  1},
-  { 1,  1, -1},
-  {-1,  1, -1}
-};
+extern MATR IK3_RndMatrWorld, IK3_RndMatrView, IK3_RndMatrProj;
+extern DBL IK3_RndProjSize, IK3_RndProjDist, IK3_RndFarClip;
 
-INT CubeE[][2] =
-{
-  {0, 1}, {1, 2}, {2, 3}, {3, 0},
-  {4, 5}, {5, 6}, {6, 7}, {7, 4},
-  {0, 4}, {1, 5}, {2, 6}, {3, 7}
-};
-ik3PRIM Cube =
-{
-  CubeP, sizeof(CubeP) / sizeof(CubeP[0]),
-  CubeE, sizeof(CubeE) / sizeof(CubeE[0])
-};
-MATR
-  IK3_RndMatrWorld,
-  IK3_RndMatrView,  
-  IK3_RndMatrProj;  
 
-DBL
-  IK3_RndProjDist, 
-  IK3_RndFarClip,  
-  IK3_RndProjSize; 
 
-#endif
+VOID IK3_RndSetProj( VOID );
+
+VOID IK3_RndPrimDraw( ik3PRIM *Pr );
+
+
+#endif /* __RENDER_H_ */
+
+/* END OF 'RENDER.H' FILE */

@@ -3,7 +3,48 @@
  * DATE: 11.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */
-#include "render.h"
+#include "anim.h"
+
+/* Global transformation matrices */
+MATR
+  IK3_RndMatrWorld, /* World (object) transformation matrix */
+  IK3_RndMatrView,  /* Camera view transform */
+  IK3_RndMatrProj;  /* Projection transform */
+
+/* Projection parameters */
+DBL
+  IK3_RndProjDist, /* Near clip plane */
+  IK3_RndFarClip ,  /* Far clip plane */
+  IK3_RndProjSize ; /* Project plane size */
+
+/* Setup projection function.
+ * ARGUMENTS: None.
+ * RETURNS: None.
+ */
+VOID IK3_RndSetProj( VOID )
+
+{
+  DBL ratio_x = 1, ratio_y = 1;
+
+  if (IK3_Anim.W >= IK3_Anim.H)
+    ratio_x = (DBL)IK3_Anim.W / IK3_Anim.H;
+  else
+    ratio_y = (DBL)IK3_Anim.H / IK3_Anim.W;
+
+  IK3_RndMatrProj = MatrFrustum(-ratio_x * IK3_RndProjSize / 2,
+                                 ratio_x * IK3_RndProjSize / 2,
+                                -ratio_y * IK3_RndProjSize / 2,
+                                 ratio_y * IK3_RndProjSize / 2,
+                                 IK3_RndProjDist, IK3_RndFarClip);
+} /* End of 'IK3_RndSetProj' function */
+
+/* Primitive draw function.
+ * ARGUMENTS:
+ *   - primtive to draw:
+ *      IK3PRIM *Pr;
+ * RETURNS: None.
+ */
+
 
 VOID IK3_RndPrimDraw( ik3PRIM *Pr )
 {
@@ -15,10 +56,10 @@ VOID IK3_RndPrimDraw( ik3PRIM *Pr )
   M = MatrMulMatr(IK3_RndMatrWorld,
     MatrMulMatr(IK3_RndMatrView, IK3_RndMatrProj));
 
-  a Transform all points */
+  /* Transform all points */
   pts = malloc(sizeof(POINT) * Pr->NumOfP);
   if (pts == NULL)
-    return;   *
+    return;
   for (i = 0; i < Pr->NumOfP; i++)
   {
     /* NDC */

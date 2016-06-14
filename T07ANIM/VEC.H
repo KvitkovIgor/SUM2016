@@ -147,18 +147,36 @@ __inline MATR MatrScale( VEC S )
   };
   return M;
 }
-__inline MATR MatrFrustum( DBL l, DBL r, DBL b, DBL t, DBL n, DBL f )
+__inline MATR MatrFrustum( DBL Left, DBL Right, DBL Bottom, DBL Top, DBL Near, DBL Far )
 {
-  MATR M = 
+  MATR m =
   {
     {
-      {  2 * n / (r - l),                 0,                    0,  0},
-      {                0,   2 * n / (t - b),                    0,  0},
-      {(r + l) / (r - l), (t + b) / (t - b),   -(f + n) / (f - n), -1},
-      {                0,                 0, -2 * n * f / (f - n),  0}
+      {      2 * Near / (Right - Left),                               0,                              0,  0},
+      {                              0,       2 * Near / (Top - Bottom),                              0,  0},
+      {(Right + Left) / (Right - Left), (Top + Bottom) / (Top - Bottom),   -(Far + Near) / (Far - Near), -1},
+      {                              0,                               0, -2 * Near * Far / (Far - Near),  0}
     }
   };
-  return M;
+
+  return m;
+} 
+__inline MATR MatrView( VEC Loc, VEC At, VEC Up1 )
+{
+  VEC
+    Dir = VecNormalize(VecSubVec(At, Loc)),
+    Right = VecNormalize(VecCrossVec(Dir, Up1)),
+    Up = VecNormalize(VecCrossVec(Right, Dir));
+  MATR m =
+  {
+    {
+      {               Right.X,                Up.X,              -Dir.X, 0},
+      {               Right.Y,                Up.Y,              -Dir.Y, 0},
+      {               Right.Z,                Up.Z,              -Dir.Z, 0},
+      {-VecDotVec(Loc, Right), -VecDotVec(Loc, Up), VecDotVec(Loc, Dir), 1}
+    }
+  };
+  return m;
 }
 /* The start of 'MatrRotateX' function */
 __inline MATR MatrRotateX( DBL AngleDegree )

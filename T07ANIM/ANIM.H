@@ -11,6 +11,7 @@
 #define MAX_UNITS 10000
 
 #include "def.h"
+#include "render.h"
 
 typedef struct tagik3UNIT ik3UNIT;
 typedef struct tagik3Anim
@@ -48,6 +49,7 @@ struct tagik3UNIT
 };
 
 extern ik3Anim IK3_Anim;
+
 
 VOID IK3_AnimCopyFrame( HDC hDC );
 VOID IK3_AnimUnit( HWND hWnd );

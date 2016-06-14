@@ -5,7 +5,7 @@
  */
 #include "anim.h"
 #include <time.h>
-#define M 50      
+#define M 50  
 #define N 100
 
 

@@ -41,6 +41,13 @@ VOID IK3_AnimUnit( HWND hWnd )
   QueryPerformanceCounter(&t);
   IK3_StartTime = IK3_OldTime = IK3_OldTimeFPS = t.QuadPart;
   IK3_PauseTime = 0;
+
+  IK3_RndMatrWorld  = MatrIdentity();
+  IK3_RndMatrView = MatrView(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  IK3_RndMatrProj = MatrFrustum(-1, 1, -1, 1, 1, 100);
+  IK3_RndProjDist = 1;
+  IK3_RndFarClip = 50;
+  IK3_RndProjSize = 1;
 }
 VOID IK3_AnimFlipFullScreen( VOID )
 {
@@ -217,7 +224,6 @@ VOID IK3_AnimRender( VOID )
   SelectObject(IK3_Anim.hDC, GetStockObject(DC_BRUSH));
   SetDCBrushColor(IK3_Anim.hDC, RGB(100, 155, 210)); 
   Rectangle(IK3_Anim.hDC, 0, 0, IK3_Anim.W, IK3_Anim.H);
-  
   for (i = 0; i < IK3_Anim.NumOfUnits; i++)
   {
     SelectObject(IK3_Anim.hDC, GetStockObject(DC_PEN));
