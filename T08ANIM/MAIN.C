@@ -81,8 +81,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine, 
   /* Update window */
   UpdateWindow(hWnd);
 
-
-  IK3_AnimAddUnit(IK3_UnitCreateCube());
+    IK3_AnimAddUnit(IK3_UnitCreateControl());
   while (GetMessage(&msg, NULL, 0, 0))
     DispatchMessage(&msg);
   

@@ -1,0 +1,45 @@
+# 
+# 
+newmtl Kerrigan_inf_eye
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Kerrigan_inf_eye_D.g32
+map_Bump Kerrigan_inf_eye_N.g32
+
+newmtl Kerrigan_inf_head
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Kerrigan_inf_head_D.g32
+map_Bumpd Kerrigan_inf_head_N.g32
+
+newmtl Kerrigan_inf_legswings
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Kerrigan_inf_legswings_D.g32
+map_Bump Kerrigan_inf_legswings_N.g32
+
+newmtl Kerrigan_inf_torso
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Kerrigan_inf_torso_D.g32
+map_Bump Kerrigan_inf_torso_N.g32

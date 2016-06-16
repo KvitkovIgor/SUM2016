@@ -71,11 +71,11 @@ VOID IK3_AnimUnit( HWND hWnd )
   IK3_PauseTime = 0;
 
   IK3_RndMatrWorld  = MatrIdentity();
-  IK3_RndMatrView = MatrView(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  IK3_RndMatrView = MatrView(VecSet(0, 1, 0), VecSet(0, 0, 0), VecSet(0, 1, 0));
   IK3_RndMatrProj = MatrFrustum(-1, 1, -1, 1, 1, 100);
-  IK3_RndProjDist = 1;
-  IK3_RndFarClip = 100;
-  IK3_RndProjSize = 1;
+  IK3_RndProjDist = 3;
+  IK3_RndFarClip = 2000;
+  IK3_RndProjSize = 3;
   /* OpenGL specific initialization */
   glClearColor(0.3, 0.5, 0.7, 1);
   glEnable(GL_DEPTH_TEST);
@@ -124,13 +124,10 @@ VOID IK3_AnimFlipFullScreen( VOID )
 } /* End of 'FlipFullScreen' function */
 VOID IK3_Reasize( INT W, INT H )
 { 
-  HDC hDC;
   IK3_Anim.W = W;
   IK3_Anim.H = H;
 
-  hDC = GetDC(IK3_Anim.hWnd);
   glViewport(0, 0, IK3_Anim.W, IK3_Anim.H);
-  ReleaseDC(IK3_Anim.hWnd, hDC);
   IK3_RndSetProj();
 }
 VOID IK3_AnimCopyFrame( HDC hDC )
@@ -250,6 +247,7 @@ VOID IK3_AnimRender( VOID )
       }
     }
   }
+
   
   for (i = 0; i < IK3_Anim.NumOfUnits; i++)
   { 
@@ -267,8 +265,3 @@ VOID IK3_AnimRender( VOID )
   /* Finalize OpenGL drawing */
   glFinish();
 }
-
-
-
-
-

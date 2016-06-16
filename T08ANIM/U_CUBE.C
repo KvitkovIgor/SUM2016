@@ -5,6 +5,7 @@
  */
 #include <time.h>
 #include "render.h"
+#include "anim.h"
 #include "units.h"
 
 typedef struct
@@ -12,7 +13,7 @@ typedef struct
   ik3UNIT;         /* Base unit fields */
   VEC Pos;         /* Cube position */
   DBL TimerShift;  /* Timer shift phase value*/
-  ik3PRIM Pr;
+  ik3OBJ Pr;
   DBL TimerSpeed;  /* Timer speed value*/
 } ik3UNIT_CUBE;
 
@@ -30,7 +31,8 @@ static VOID IK3_UnitInit( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
                      MatrMulMatr(MatrRotateY((Uni->TimerSpeed * Ani->Time) * 30 + Uni->TimerShift),
                                  MatrTranslate(VecAddVec(Uni->Pos,
                                                          VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3)))));
-  IK3_RndPrimLoad(&Uni->Pr, "g3d\\piggy.g3d");
+
+  IK3_RndObjLoad(&Uni->Pr, "Kerrigan_infested\\Kerrigan_infested.g3d");
 } /* End of 'IK3_UnitInit' function */
 
 /* Unit cube deinitialization function.
@@ -43,7 +45,7 @@ static VOID IK3_UnitInit( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
  */
 static VOID IK3_UnitClose( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
 {
-   IK3_RndPrimFree(&Uni->Pr);
+   IK3_RndObjFree(&Uni->Pr);
 } /* End of 'IK3_UnitClose' function */
 
 /* Unit cube inter frame events handle function.
@@ -69,7 +71,7 @@ static VOID IK3_UnitResponse( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
 static VOID IK3_UnitRender( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
 {
   /* IK3_RndMatrWorld = MatrScale(VecSet(0.3, 0.3, 0.3)); */
-  IK3_RndPrimDraw(&Uni->Pr);
+  IK3_RndObjDraw(&Uni->Pr);
 } /* End of 'IK3_UnitRender' function */
 
 /* Unit cube creation function.

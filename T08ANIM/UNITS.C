@@ -75,5 +75,3 @@ ik3UNIT * IK3_AnimUnitCreate( INT Size )
   Uni->Render = IK3_UnitRender;
   return Uni;
 } /* End of 'VG4_AnimUnitCreate' function */
-
-

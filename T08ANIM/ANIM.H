@@ -22,6 +22,7 @@ typedef struct tagik3Anim
   HDC hDC;
   INT W, H;
   HGLRC hGLRC;
+  HBITMAP hFrame;
   ik3UNIT *Units[MAX_UNITS];
   INT NumOfUnits;
   DBL
@@ -49,6 +50,82 @@ struct tagik3UNIT
   VOID (*Response)( ik3UNIT *Uni, ik3Anim *Ani );
   VOID (*Render)( ik3UNIT *Uni, ik3Anim *Ani );
 };
+typedef struct
+{
+  ik3PRIM *Prims;
+  INT NumOfPrims;
+} ik3OBJ;
+
+
+
+/* Material representation type */
+typedef struct
+{
+  CHAR Name[300]; /* Material name */
+  VEC Ka, Kd, Ks; /* Illumination coefficients */
+  FLT Ph, Trans;  /* Shininess and Phong, transparency */
+  INT TexW, TexH; /* Textiure image size */
+  INT TexNo;      /* For load: bytes per pixel, in use: OpenGL texture no */
+} ik3MTL;
+extern UINT IK3_RndPrg;
+
+/* Materials array */
+#define IK3_MAX_MATERIALS 10000
+extern ik3MTL IK3_RndMaterials[IK3_MAX_MATERIALS];
+extern INT IK3_RndNumOfMaterials;
+
+/* Setup projection function.
+ * ARGUMENTS: None.
+ * RETURNS: None.
+ */
+VOID IK3_RndSetProj( VOID );
+
+/* Object draw function.
+ * ARGUMENTS:
+ *   - object structure pointer:
+ *       vg4OBJ *Obj;
+ * RETURNS: None.
+ */
+VOID IK3_RndObjDraw( ik3OBJ *Obj );
+
+/* Load object from '*.g3d' file function.
+ * ARGUMENTS:
+ *   - object structure pointer:
+ *       vg4OBJ *Obj;
+ *   - file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE is success, FALSE otherwise.
+ */
+BOOL IK3_RndObjLoad( ik3OBJ *Obj, CHAR *FileName );
+
+/* Object free function.
+ * ARGUMENTS:
+ *   - object structure pointer:
+ *       vg4OBJ *Obj;
+ * RETURNS: None.
+ */
+VOID IK3_RndObjFree( ik3OBJ *Obj );
+
+/* Material find by name function.
+ * ARGUMENTS:
+ *   - material name:
+ *       CHAR *Name;
+ * RETURNS:
+ *   (INT) number of found material or -1 if no result.
+ */
+INT IK3_RndFindMaterial( CHAR *Name );
+
+/* Material load function.
+ * ARGUMENTS:
+ *   - material file name:
+ *       CHAR *FileName;
+ * RETURNS: None.
+*/
+VOID IK3_RndLoadMaterials( CHAR *FileName );
+
+
+
 
 extern ik3Anim IK3_Anim;
 

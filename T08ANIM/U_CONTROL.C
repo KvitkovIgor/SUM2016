@@ -18,7 +18,7 @@ typedef struct
 
 static VOID IK3_UnitInit( ik3UNIT_CONTROL *Uni, ik3Anim *Ani )
 {
-   Uni->Pos = VecSet(100, 0, 100);
+   Uni->Pos = VecSet(5, 0, 5);
 }
 static VOID IK3_UnitResponse( ik3UNIT_CONTROL *Uni, ik3Anim *Ani )
 {
@@ -51,13 +51,13 @@ static VOID IK3_UnitResponse( ik3UNIT_CONTROL *Uni, ik3Anim *Ani )
     Uni->Pos = PointTransform4(Uni->Pos, MatrRotateX(1.59  * Ani->Mdy ));
   }
 
-  Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(1.59  * Ani->Keys[VK_RIGHT]));
-  Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(-1.59  * Ani->Keys[VK_LEFT]));
+  Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(0.059  * Ani->Keys[VK_RIGHT]));
+  Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(-0.059  * Ani->Keys[VK_LEFT]));
 
   r = VecLen(Uni->Pos);
   Uni->Pos = VecMulNum(Uni->Pos, (r + Ani->Mdz * Ani->DeltaTime * 0.1) / r);
 
-  IK3_RndMatrView = MatrView(Uni->Pos, VecSet(0, 0, 0), VecSet(0, 1, 0));
+  IK3_RndMatrView = MatrView(Uni->Pos, VecSet(2, 2, 2), VecSet(0, 1, 0));
 
 } /* End of 'IK3_UnitResponse' function */
 
