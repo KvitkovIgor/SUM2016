@@ -1,87 +1,120 @@
-/* FILE NAME: T04CLOCK.C
+/* FILE nAME: T05DET.C
  * PROGRAMMER: IK3
- * DATE: 07.06.2016
- * PURPOSE: WinAPI windowed applictaion sample
+ * DATE: 06.06.2016
  */
 
-#include <stdio.h>
-#include <conio.h>
-#define N 5  
-#define MAX 30
-int P[N], Parity = 0;
-double sum, A[MAX][MAX];
+#include <stdio.h> 
+#include <conio.h> 
 
-void Swap( int *A, int *B )
-{
-  int tmp = *A;
-  
-  Parity = !Parity;
+#define MAX 50 
 
-  *A = *B;
-  *B = tmp;
-}
+double A[MAX][MAX], sum; 
+int P[MAX], N; 
+char Parity = 1, SaveParity; 
 
-void LoadMatrix( char *FileName )
-{
-  int i, j;
-  FILE *F;
+void Swap( int *A, int *B ) 
+{ 
+  int tmp; 
 
-  F = fopen(FileName, "r");
-  if (F == NULL)
-    return;
-  for (i = 0; i < 5; i++)
-    for (j = 0; j < 5; j++)
-      fscanf(F, "%lf", A[i][j]);
-      
-  fclose(F);
-}
-void Go( int Pos )
-{
-  int i, prod = 1, SaveParity;
-  double x;
-  
-  if (Pos == N)
-  {                           
-    for (i = Pos; i < MAX; i++)
-      prod *= A[i][P[i]];
-    if (Parity)
-      sum += prod;
-    else
-      sum -= prod;
+  tmp = *A; 
+  *A = *B; 
+  *B = tmp; 
+} 
+
+void Go( int Pos ) 
+{ 
+  int i/*, x*/; 
+  double prod = 1; 
+
+  if (Pos == N) 
+  { 
+    for (i = 0; i < N; i++) 
+    prod *= A[i][P[i]]; 
+
+    if (Parity) 
+    sum += prod; 
+    else 
+    sum -= prod; 
+
     return; 
-  }
-  else
-  {
-    x = P[0];
-    Go(Pos + 1);
-    SaveParity = Parity;
-    for (i = Pos; i < MAX; i++)
-    {
-      Swap(&P[Pos], &P[i]);
-      Go(Pos + 1);
-    }
   } 
-  x = P[0];
-   for (i = Pos + 1; i < N; i++)
-    P[i - 1] = P[i];
-  P[N - 1] = x;
-  Parity = SaveParity;
+  else 
+  { 
+    for (i = Pos; i < N; i++) 
+    {
+      Swap(&P[Pos], &P[i]); 
+      if (Pos != i) 
+      Parity = !Parity; 
+      Go(Pos + 1); 
+      if (Pos != i) 
+      Parity = !Parity; 
+      Swap(&P[Pos], &P[i]); 
+      /* 
+      Go(Pos + 1); 
+      SaveParity = Parity; 
+      for (i = Pos + 1; i < N; i++) 
+      { 
+        Swap(&P[Pos], &P[i]); 
+        Parity = !Parity; 
+        Go(Pos + 1); 
+      } 
+      x = P[Pos]; 
+      for (i = Pos + 1; i < N; i++) 
+        P[i - 1] = P[i]; 
+      P[N - 1] = x; 
+      Parity = SaveParity; 
+      */ 
+    } 
+  } 
+} 
 
-}
-double EvalDeterminat( char *FileName )
-{
-  int i;
-  
-  LoadMatrix(FileName);
-  sum = 0;
+void LoadMatrix( char *FileName ) 
+{ 
+  FILE *F;
+  int i, j;
+
+  F = fopen(FileName,"r");
+  if (F == NULL)
+  return;
+
+  fscanf(F,"%d",&N);
 
   for (i = 0; i < N; i++)
-    P[i] = i;
-  Go(0);
-  return sum;
-}
+    for (j = 0 ; j < N ; j++)
+      fscanf(F,"%lf", &A[i][j]);
+
+  fclose(F);
+} 
+
+double EvalDeterm( char *FileName ) 
+{ 
+  int i; 
+
+  LoadMatrix(FileName); 
+
+  sum = 0; 
+  for (i = 0; i < N; i++) 
+  P[i] = i; 
+  Go(0); 
+
+  return sum; 
+} 
+
 void main( void ) 
-{
-  printf("DET = %f\n", EvalDeterminat("m3.txt"));
-  _getch();
+{ 
+  int i; 
+  char *M[] = 
+  { 
+  "mat1.txt", "mat2.txt", "mat3.txt", "mat4.txt"
+  }; 
+
+  for (i = 0; i < N; i++) 
+    P[i] = i; 
+
+  for (i = 0; i < sizeof(M) / sizeof(M[0]); i++) 
+    printf("Det(%d)[%s] = %f\n", i, M[i], EvalDeterm(M[i])); 
+
+  _getch(); 
 }
+
+/* END OF 'T05DET.C' FILE */
