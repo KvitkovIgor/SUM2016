@@ -1,13 +1,12 @@
 /* FILE NAME: U_CUBE.C
  * PROGRAMMER: IK3
- * DATE: 11.06.2016
+ * DATE: 15.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */
 #include <time.h>
 #include "render.h"
 #include "units.h"
 
-/* Ball unit representation type */
 typedef struct
 {
   ik3UNIT;         /* Base unit fields */
@@ -16,35 +15,6 @@ typedef struct
   ik3PRIM Pr;
   DBL TimerSpeed;  /* Timer speed value*/
 } ik3UNIT_CUBE;
-
-
-/* Cube points */
-VEC CubeP[] =
-{
-  {-1, -1,  1},
-  { 1, -1,  1},
-  { 1, -1, -1},
-  {-1, -1, -1},
-  {-1,  1,  1},
-  { 1,  1,  1},
-  { 1,  1, -1},
-  {-1,  1, -1}
-};
-
-/* Cube edges */
-INT CubeE[][2] =
-{
-  {0, 1}, {1, 2}, {2, 3}, {3, 0},
-  {4, 5}, {5, 6}, {6, 7}, {7, 4},
-  {0, 4}, {1, 5}, {2, 6}, {3, 7}
-};
-
-/* Cube primitive */
-ik3PRIM Cube =
-{
-  CubeP, sizeof(CubeP) / sizeof(CubeP[0]),
-  CubeE, sizeof(CubeE) / sizeof(CubeE[0])
-};
 
 /* Unit cube initialization function.
  * ARGUMENTS:
@@ -56,10 +26,11 @@ ik3PRIM Cube =
  */
 static VOID IK3_UnitInit( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
 {
-  Uni->Pos = VecSet(Rnd0() * 5, Rnd0() * 5, Rnd0() * 5);
-  Uni->TimerShift = Rnd1() * 59;
-  Uni->TimerSpeed = Rnd1() * 8;
-  IK3_RndPrimLoad(&Uni->Pr, "g3d\\cow.g3d");
+  IK3_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.03F, 0.03F, 0.03F)),
+                     MatrMulMatr(MatrRotateY((Uni->TimerSpeed * Ani->Time) * 30 + Uni->TimerShift),
+                                 MatrTranslate(VecAddVec(Uni->Pos,
+                                                         VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3)))));
+  IK3_RndPrimLoad(&Uni->Pr, "g3d\\piggy.g3d");
 } /* End of 'IK3_UnitInit' function */
 
 /* Unit cube deinitialization function.
@@ -85,14 +56,6 @@ static VOID IK3_UnitClose( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
  */
 static VOID IK3_UnitResponse( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
 {
-  if (Ani->KeysClick[VK_SPACE])
-    IK3_AnimAddUnit(IK3_UnitCreateBall());
-  if (Ani->KeysClick[VK_F1])
-    IK3_AnimAddUnit(IK3_UnitCreateCube());
-  if (Ani->KeysClick[VK_F2])
-    IK3_AnimFlipFullScreen();
-  if (Ani->KeysClick[VK_ESCAPE])
-    IK3_AnimDoExit();
 } /* End of 'IK3_UnitResponse' function */
 
 /* Unit render function.
@@ -105,10 +68,7 @@ static VOID IK3_UnitResponse( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
  */
 static VOID IK3_UnitRender( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
 {
-  IK3_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.1F, 0.1F, 0.1F)),
-                     MatrMulMatr(MatrRotateY((Uni->TimerSpeed * Ani->Time) * 30 + Uni->TimerShift),
-                                 MatrTranslate(VecAddVec(Uni->Pos,
-                                                         VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3)))));
+  /* IK3_RndMatrWorld = MatrScale(VecSet(0.3, 0.3, 0.3)); */
   IK3_RndPrimDraw(&Uni->Pr);
 } /* End of 'IK3_UnitRender' function */
 

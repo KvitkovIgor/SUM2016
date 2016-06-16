@@ -6,9 +6,13 @@
 
 #include <stdio.h>
 #include "anim.h"
+#include "units.h"
 #include <mmsystem.h>
 
 #pragma comment(lib, "winmm")
+#pragma comment(lib, "opengl32")
+#pragma comment(lib, "glu32")
+#pragma comment(lib, "glew32s")
 
 #define IK3_GET_JOYSTIC_AXIS(A) \
   (2.0 * (ji.dw##A##pos - jc.w##A##min) / (jc.w##A##max - jc.w##A##min - 1) - 1)
@@ -27,15 +31,39 @@ static UINT64
 
 VOID IK3_AnimUnit( HWND hWnd )
 {
-  HDC hDC; 
+  INT i;
   LARGE_INTEGER t;
-
+  PIXELFORMATDESCRIPTOR pfd = {0};
+ 
   memset(&IK3_Anim, 0, sizeof(ik3Anim));
 
+  /* Store window and create memory device context */
   IK3_Anim.hWnd = hWnd;
-  hDC  = GetDC(hWnd);
-  IK3_Anim.hDC = CreateCompatibleDC(hDC);
-  ReleaseDC(hWnd, hDC);
+  IK3_Anim.hDC = GetDC(hWnd);
+  /* OpenGL init: pixel format setup */
+  pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+  pfd.nVersion = 1;
+  pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL;
+  pfd.cColorBits = 32;
+  pfd.cDepthBits = 32;
+  i = ChoosePixelFormat(IK3_Anim.hDC, &pfd);
+  DescribePixelFormat(IK3_Anim.hDC, i, sizeof(pfd), &pfd);
+  SetPixelFormat(IK3_Anim.hDC, i, &pfd);
+
+  /* OpenGL init: setup rendering context */
+  IK3_Anim.hGLRC = wglCreateContext(IK3_Anim.hDC);
+  wglMakeCurrent(IK3_Anim.hDC, IK3_Anim.hGLRC);
+
+  /* OpenGL init: setup extensions: GLEW library */
+  if (glewInit() != GLEW_OK ||
+      !(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader))
+  {
+    wglMakeCurrent(NULL, NULL);
+    wglDeleteContext(IK3_Anim.hGLRC);
+    ReleaseDC(IK3_Anim.hWnd, IK3_Anim.hDC);
+    exit(0);
+  }
+
   QueryPerformanceFrequency(&t);
   IK3_TimePerSec = t.QuadPart;
   QueryPerformanceCounter(&t);
@@ -43,11 +71,16 @@ VOID IK3_AnimUnit( HWND hWnd )
   IK3_PauseTime = 0;
 
   IK3_RndMatrWorld  = MatrIdentity();
-  IK3_RndMatrView = MatrView(VecSet(15, 15, 15), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  IK3_RndMatrView = MatrView(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 1, 0));
   IK3_RndMatrProj = MatrFrustum(-1, 1, -1, 1, 1, 100);
   IK3_RndProjDist = 1;
-  IK3_RndFarClip = 50;
+  IK3_RndFarClip = 100;
   IK3_RndProjSize = 1;
+  /* OpenGL specific initialization */
+  glClearColor(0.3, 0.5, 0.7, 1);
+  glEnable(GL_DEPTH_TEST);
+  IK3_RndPrg = IK3_RndShaderLoad("a");
+  /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
 }
 VOID IK3_AnimFlipFullScreen( VOID )
 {
@@ -90,23 +123,19 @@ VOID IK3_AnimFlipFullScreen( VOID )
   IsFullScreen = !IsFullScreen;
 } /* End of 'FlipFullScreen' function */
 VOID IK3_Reasize( INT W, INT H )
-{
+{ 
   HDC hDC;
-  
   IK3_Anim.W = W;
   IK3_Anim.H = H;
 
-  if (IK3_Anim.hFrame != NULL)
-    DeleteObject(IK3_Anim.hFrame);
-
   hDC = GetDC(IK3_Anim.hWnd);
-  IK3_Anim.hFrame = CreateCompatibleBitmap(hDC, IK3_Anim.W, IK3_Anim.H);
+  glViewport(0, 0, IK3_Anim.W, IK3_Anim.H);
   ReleaseDC(IK3_Anim.hWnd, hDC);
-  SelectObject(IK3_Anim.hDC, IK3_Anim.hFrame);
+  IK3_RndSetProj();
 }
 VOID IK3_AnimCopyFrame( HDC hDC )
 {
-  BitBlt(hDC, 0, 0, IK3_Anim.W, IK3_Anim.H, IK3_Anim.hDC, 0, 0, SRCCOPY);
+  SwapBuffers(IK3_Anim.hDC);
 }
 VOID IK3_AnimAddUnit( ik3UNIT *Uni )
 {
@@ -129,8 +158,15 @@ VOID IK3_AnimClose( VOID )
     IK3_Anim.Units[i]->Close(IK3_Anim.Units[i], &IK3_Anim);
     free(IK3_Anim.Units[i]);
   }
-  DeleteDC(IK3_Anim.hDC);
-  DeleteObject(IK3_Anim.hFrame);
+  
+  IK3_RndShaderFree(IK3_RndPrg);
+  /* Delete rendering context */
+  wglMakeCurrent(NULL, NULL);
+  wglDeleteContext(IK3_Anim.hGLRC);
+
+  /* Delete GDI data */
+  ReleaseDC(IK3_Anim.hWnd, IK3_Anim.hDC);
+
   IK3_Anim.NumOfUnits = 0;
 }
 VOID IK3_AnimRender( VOID )
@@ -216,22 +252,20 @@ VOID IK3_AnimRender( VOID )
   }
   
   for (i = 0; i < IK3_Anim.NumOfUnits; i++)
+  { 
     IK3_Anim.Units[i]->Response(IK3_Anim.Units[i], &IK3_Anim);
+  }
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  SelectObject(IK3_Anim.hDC, GetStockObject(NULL_PEN));
-  SelectObject(IK3_Anim.hDC, GetStockObject(DC_BRUSH));
-  SetDCBrushColor(IK3_Anim.hDC, RGB(100, 155, 210)); 
-  Rectangle(IK3_Anim.hDC, 0, 0, IK3_Anim.W, IK3_Anim.H);
-
+  /*** Render all units ***/
   for (i = 0; i < IK3_Anim.NumOfUnits; i++)
   {
-    SelectObject(IK3_Anim.hDC, GetStockObject(DC_PEN));
-    SelectObject(IK3_Anim.hDC, GetStockObject(DC_BRUSH));
-    SetDCBrushColor(IK3_Anim.hDC, RGB(255, 255, 255));
-    SetDCPenColor(IK3_Anim.hDC, RGB(0, 0, 0));
-
+    IK3_RndMatrWorld = MatrIdentity();
     IK3_Anim.Units[i]->Render(IK3_Anim.Units[i], &IK3_Anim);
   }
+
+  /* Finalize OpenGL drawing */
+  glFinish();
 }
 
 

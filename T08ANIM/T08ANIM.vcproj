@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="T07ANIM"
-	ProjectGUID="{18DEAB3B-F5A7-42EC-8CCB-69B26445F43E}"
-	RootNamespace="T07ANIM"
+	Name="T08ANIM"
+	ProjectGUID="{454B241D-E712-460A-9CCA-B7F5CD4E6A57}"
+	RootNamespace="T08ANIM"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="X:\TGRKIT\INCLUDE;$(DXSDK_DIR)Include;$(OPENAL_DIR)Include;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -120,7 +120,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="X:\TGRKIT\INCLUDE;$(DXSDK_DIR)Include;$(OPENAL_DIR)Include;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS;_WINDOWS"
 				RuntimeLibrary="1"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -142,7 +142,7 @@
 				AdditionalLibraryDirectories="X:\TGRKIT\LIB;$(DXSDK_DIR)Lib\0x86;$(OPENAL_DIR)Libs;"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -183,64 +183,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LOADPRIM.C"
-				>
-			</File>
-			<File
-				RelativePath=".\MAIN.C"
-				>
-			</File>
-			<File
-				RelativePath=".\RENDER.H"
-				>
-			</File>
-			<File
-				RelativePath=".\U_CLOCK.C"
-				>
-			</File>
-			<File
-				RelativePath=".\U_CUBE.C"
-				>
-			</File>
-			<File
-				RelativePath=".\U_SPHERE.C"
-				>
-			</File>
-			<Filter
-				Name="render"
-				>
-				<File
-					RelativePath=".\RENDER.C"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="UNITS"
-				>
-				<File
-					RelativePath=".\UNITS.C"
-					>
-				</File>
-				<File
-					RelativePath=".\UNITS.H"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="U_BALL"
-				>
-				<File
-					RelativePath=".\U_BALL.C"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
 				RelativePath=".\ANIM.H"
 				>
 			</File>
@@ -249,9 +191,55 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LOADPRIM.C"
+				>
+			</File>
+			<File
+				RelativePath=".\MAIN.C"
+				>
+			</File>
+			<File
+				RelativePath=".\RENDER.C"
+				>
+			</File>
+			<File
+				RelativePath=".\RENDER.H"
+				>
+			</File>
+			<File
+				RelativePath=".\SHADERS.C"
+				>
+			</File>
+			<File
+				RelativePath=".\U_BALL.C"
+				>
+			</File>
+			<File
+				RelativePath=".\U_CONTROL.C"
+				>
+			</File>
+			<File
+				RelativePath=".\U_CUBE.C"
+				>
+			</File>
+			<File
+				RelativePath=".\UNITS.C"
+				>
+			</File>
+			<File
+				RelativePath=".\UNITS.H"
+				>
+			</File>
+			<File
 				RelativePath=".\VEC.H"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 		</Filter>
 		<Filter
 			Name="Resource Files"

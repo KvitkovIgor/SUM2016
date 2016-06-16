@@ -1,6 +1,6 @@
 /* FILENAME: RENDER.H
  * PROGRAMMER: IK3
- * DATE: 13.06.2016
+ * DATE: 15.06.2016
  * PURPOSE: Animation system difinitions
 */
 
@@ -10,15 +10,8 @@
 #include "anim.h"
 
 /* Primitive representation type */
+/* Vertex representation type */
 typedef struct
-{
-  VEC *P;          /* Primitive points array */
-  INT NumOfP;      /* Point array size */
-  INT (*Edges)[2]; /* Edges array - array of point pairs */
-  INT NumOfE;      /* Edges array size */
-} ik3PRIM;
-/* Vertex representation type  */
-typedef struct                  
 {
   VEC  P;  /* Vertex position */
   VEC2 T;  /* Vertex texture coordinates */
@@ -26,9 +19,20 @@ typedef struct
   VEC4 C;  /* Vertex color */
 } ik3VERTEX;
 
+/* Primitive representation type */
+typedef struct
+{
+  INT VA;     /* Primitive vertex array */
+  INT VBuf;   /* Point array size */
+  INT IBuf;    /* Facets index array */
+  INT NumOfI;       /* Facets index array size */
+} ik3PRIM;
+
+/* Ball unit representation type */
+
 extern MATR IK3_RndMatrWorld, IK3_RndMatrView, IK3_RndMatrProj;
 extern DBL IK3_RndProjSize, IK3_RndProjDist, IK3_RndFarClip;
-
+extern INT IK3_RndPrg;
 
 
 VOID IK3_RndSetProj( VOID );

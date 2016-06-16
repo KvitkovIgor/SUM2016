@@ -78,4 +78,12 @@ VOID IK3_RndPrimDraw( ik3PRIM *Pr )
     LineTo(IK3_Anim.hDC, pts[n1].x, pts[n1].y);
   }
   free(pts);
+}
+VOID IK3_RndPrimFree( ik3PRIM *Pr )
+{
+  if (Pr->P != NULL)
+    free(Pr->P);
+  if (Pr->Edges != NULL)
+    free(Pr->Edges);
+  memset(Pr, 0, sizeof(ik3PRIM));
 } /* End of 'IK3_RndPrimDraw' function */

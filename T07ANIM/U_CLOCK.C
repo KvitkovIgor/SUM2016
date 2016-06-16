@@ -6,7 +6,7 @@
 #include <time.h>
 
 #include "anim.h"
-#include "untis.h"
+#include "units.h"
 
 typedef struct
 {
@@ -18,9 +18,7 @@ static VOID IK3_UnitInit( ik3UNIT_CLOCK *Uni, ik3Anim *Ani )
 }
 static VOID IK3_UnitResponse( ik3PRIM *Uni, ik3Anim *Ani )
 {
-  
-  if (Ani->KeysClick[VK_ESCAPE])
-    IK3_AnimDoExit();
+
 }
 static VOID IK3_UnitRender( ik3UNIT_CLOCK *Uni, ik3Anim *Ani )
 {

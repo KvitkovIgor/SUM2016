@@ -1,6 +1,6 @@
 /* FILE NAME: VEC.H
  * PROGRAMMER: IK3
- * DATE: 08.06.2016
+ * DATE: 15.06.2016
  * PURPOSE: WinAPI windowed applictaion sample
  */
 #ifndef __VEC_H_
@@ -71,9 +71,8 @@ __inline FLT VecDotVec( VEC A, VEC B )
 {
   return A.X * B.X + A.Y * B.Y + A.Z * B.Z;
 } /* End of 'VecDotVec' function */
-                                                                                                                  
 __inline VEC VecCrossVec( VEC A, VEC B )
-{                                       
+{
   return VecSet(A.Y * B.Z - A.Z * B.Y, A.Y * B.X - A.X* B.Z, A.X * B.Z - A.Z * B.X);
 }
 __inline FLT VecLen2( VEC V )
@@ -90,6 +89,12 @@ __inline VEC VecNormalize( VEC V )
 
   if (len != 1 && len != 0)
     len = sqrt(len), V.X /= len, V.Y /= len, V.Z /= len;
+  return V;
+}
+__inline VEC4 Vec4Set( FLT X, FLT Y, FLT Z, FLT A )
+{
+  VEC4 V = {X, Y, Z, A};
+
   return V;
 }
 /* The start of 'PointTransform' function */

@@ -1,49 +1,18 @@
 
-/* Primitive representation type */
-typedef struct
-{
-  VEC *P;          /* Primitive points array */
-  INT NumOfP;      /* Point array size */
-  INT (*Edges)[2]; /* Edges array - array of point pairs */
-  INT NumOfE;      /* Edges array size */
-} ik3PRIM;
+#include <stdio.h>
 
-
-/* Primitive free function.
- * ARGUMENTS:
- *   - primtive to free:
- *       vg4PRIM *Pr;
- * RETURNS: None.
- */
-VOID IK3_RndPrimFree( ik3PRIM *Pr )
-{
-  if (Pr->P != NULL)
-    free(Pr->P);
-  if (Pr->Edges != NULL)
-    free(Pr->Edges);
-  memset(Pr, 0, sizeof(ik3PRIM));
-} /* End of 'VG4_RndPrimFree' function */
-
-
-/* Vertex representation type  */
-typedef struct                  
-{
-  VEC  P;  /* Vertex position */
-  VEC2 T;  /* Vertex texture coordinates */
-  VEC  N;  /* Normal at vertex */
-  VEC4 C;  /* Vertex color */
-} ik3VERTEX;
+#include "render.h"
 
 /* Load primitive from '*.g3d' file function.
  * ARGUMENTS:
  *   - primitive structure pointer:
- *       vg4PRIM *Pr;
+ *       ik3PRIM *Pr;
  *   - file name:
  *       CHAR *FileName;
  * RETURNS:
  *   (BOOL) TRUE is success, FALSE otherwise.
  */
-BOOL VG4_RndPrimLoad( ik3PRIM *Pr, CHAR *FileName )
+BOOL IK3_RndPrimLoad( ik3PRIM *Pr, CHAR *FileName )
 {
   FILE *F;
   DWORD Sign;
@@ -115,7 +84,7 @@ BOOL VG4_RndPrimLoad( ik3PRIM *Pr, CHAR *FileName )
     Pr->NumOfE = NumOfF;
     for (i = 0; i < NumOfP; i++)
     {
-      fread(&V, sizeof(vg4VERTEX), 1, F);
+      fread(&V, sizeof(ik3VERTEX), 1, F);
       Pr->P[i] = V.P;
     }
     for (i = 0; i < NumOfF / 3; i++)
