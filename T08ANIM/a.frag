@@ -73,5 +73,6 @@ void main( void )
   OutColor = 2 * nl * tc.rgba;
   OutColor = vec4(Ka + Kd * nl + Ks * 0, 1) + tc;
   */
-  OutColor = vec4(Shade(normalize(DrawNormal)), Trans) * 2;
+  OutColor = vec4(Shade(normalize(DrawNormal)), Trans);
+  OutColor = vec4(tc.rgb * nl * 2, Trans);
 }

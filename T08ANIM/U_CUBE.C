@@ -27,12 +27,12 @@ typedef struct
  */
 static VOID IK3_UnitInit( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
 {
-  IK3_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.03F, 0.03F, 0.03F)),
+  IK3_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.003F, 0.003F, 0.003F)),
                      MatrMulMatr(MatrRotateY((Uni->TimerSpeed * Ani->Time) * 30 + Uni->TimerShift),
                                  MatrTranslate(VecAddVec(Uni->Pos,
                                                          VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3)))));
 
-  IK3_RndObjLoad(&Uni->Pr, "Kerrigan_infested\\Kerrigan_infested.g3d");
+  IK3_RndObjLoad(&Uni->Pr, "starwars\\starwars.g3d");
 } /* End of 'IK3_UnitInit' function */
 
 /* Unit cube deinitialization function.

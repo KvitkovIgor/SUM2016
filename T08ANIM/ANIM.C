@@ -74,54 +74,17 @@ VOID IK3_AnimUnit( HWND hWnd )
   IK3_RndMatrView = MatrView(VecSet(0, 1, 0), VecSet(0, 0, 0), VecSet(0, 1, 0));
   IK3_RndMatrProj = MatrFrustum(-1, 1, -1, 1, 1, 100);
   IK3_RndProjDist = 3;
-  IK3_RndFarClip = 2000;
+  IK3_RndFarClip = 3000;
   IK3_RndProjSize = 3;
   /* OpenGL specific initialization */
   glClearColor(0.3, 0.5, 0.7, 1);
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   IK3_RndPrg = IK3_RndShaderLoad("a");
   /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
 }
-VOID IK3_AnimFlipFullScreen( VOID )
-{
-  static BOOL IsFullScreen = FALSE;
-  static RECT SaveRect;
 
-  if (IsFullScreen)
-  {
-    /* restore window size */
-    SetWindowPos(IK3_Anim.hWnd, HWND_TOP,
-      SaveRect.left, SaveRect.top,
-      SaveRect.right - SaveRect.left, SaveRect.bottom - SaveRect.top,
-      SWP_NOOWNERZORDER);
-  }
-  else
-  {
-    /* Set full screen size to window */
-    HMONITOR hmon;
-    MONITORINFOEX moninfo;
-    RECT rc;
-
-    /* Store window old size */
-    GetWindowRect(IK3_Anim.hWnd, &SaveRect);
-
-    /* Get nearest monitor */
-    hmon = MonitorFromWindow(IK3_Anim.hWnd, MONITOR_DEFAULTTONEAREST);
-
-    /* Obtain monitor info */
-    moninfo.cbSize = sizeof(moninfo);
-    GetMonitorInfo(hmon, (MONITORINFO *)&moninfo);
-
-    /* Set window new size */
-    rc = moninfo.rcMonitor;
-    AdjustWindowRect(&rc, GetWindowLong(IK3_Anim.hWnd, GWL_STYLE), FALSE);
-
-    SetWindowPos(IK3_Anim.hWnd, HWND_TOPMOST,
-      rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top,
-      SWP_NOOWNERZORDER);
-  }
-  IsFullScreen = !IsFullScreen;
-} /* End of 'FlipFullScreen' function */
 VOID IK3_Reasize( INT W, INT H )
 { 
   IK3_Anim.W = W;

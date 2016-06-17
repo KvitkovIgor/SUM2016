@@ -18,7 +18,7 @@ typedef struct
 
 static VOID IK3_UnitInit( ik3UNIT_CONTROL *Uni, ik3Anim *Ani )
 {
-   Uni->Pos = VecSet(5, 0, 5);
+   Uni->Pos = VecSet(1500, 0, 900);
 }
 static VOID IK3_UnitResponse( ik3UNIT_CONTROL *Uni, ik3Anim *Ani )
 {
@@ -34,8 +34,6 @@ static VOID IK3_UnitResponse( ik3UNIT_CONTROL *Uni, ik3Anim *Ani )
     IK3_AnimAddUnit(IK3_UnitCreateBall());
   if (Ani->KeysClick['C'])
     IK3_AnimAddUnit(IK3_UnitCreateCube());
-  if (Ani->KeysClick[VK_RETURN] && Ani->Keys[VK_MENU])
-    IK3_AnimFlipFullScreen();
   if (Ani->KeysClick[VK_ESCAPE])
     IK3_AnimDoExit();
   if (Ani->KeysClick['P'])
@@ -47,12 +45,12 @@ static VOID IK3_UnitResponse( ik3UNIT_CONTROL *Uni, ik3Anim *Ani )
 
   if (Ani->Keys[VK_LBUTTON])
   {
-    Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(1.59  * Ani->Mdx));
-    Uni->Pos = PointTransform4(Uni->Pos, MatrRotateX(1.59  * Ani->Mdy ));
+    Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(0.0059  * Ani->Mdx));
+    Uni->Pos = PointTransform4(Uni->Pos, MatrRotateX(0.0059  * Ani->Mdy ));
   }
 
-  Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(0.059  * Ani->Keys[VK_RIGHT]));
-  Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(-0.059  * Ani->Keys[VK_LEFT]));
+  Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(0.59  * Ani->Keys[VK_RIGHT]));
+  Uni->Pos = PointTransform4(Uni->Pos, MatrRotateY(-0.59  * Ani->Keys[VK_LEFT]));
 
   r = VecLen(Uni->Pos);
   Uni->Pos = VecMulNum(Uni->Pos, (r + Ani->Mdz * Ani->DeltaTime * 0.1) / r);

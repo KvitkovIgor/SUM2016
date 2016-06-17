@@ -115,7 +115,7 @@ VOID LoadSphere( VOID )
 
   /* Load image from file */
   hMemDC = CreateCompatibleDC(hDC);
-  hBm = LoadImage(NULL, "E.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+  hBm = LoadImage(NULL, "B.BMP", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
   GetObject(hBm, sizeof(bm), &bm);
   Globe.W = bm.bmWidth;
   Globe.H = bm.bmHeight;
@@ -225,7 +225,6 @@ VOID DrawSphere( HDC hDC, INT Xc, INT Yc, INT R )
     }
 
   LoadSphere();
-
   for (i = 0; i < M - 1; i++)
   {
     for (j = 0; j < N - 1; j++)

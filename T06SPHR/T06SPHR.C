@@ -67,6 +67,7 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
     hMemDCLogo = CreateCompatibleDC(hDC);
     SelectObject(hMemDCLogo, hBmLogo);
     ReleaseDC(hWnd, hDC);
+    LoadSphere();
   case WM_SIZE:
     w = LOWORD(lParam);
     h = HIWORD(lParam);
@@ -88,7 +89,7 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
       SendMessage(hWnd, WM_DESTROY, 0, 0);
     return 0;
   case WM_TIMER:
-    Rectangle(hMemDC, 0, 0, w + 1, h + 1);    
+    Rectangle(hMemDC, 0, 0, w + 1, h + 1);
     DrawSphere( hMemDC, w / 2 + sin(clock() / 600.0) * 450.0, h / 2, 256);
     BitBlt(hMemDC, 725 + sin(clock() / 600.0) * 650.0, 0, bm.bmWidth, bm.bmHeight, hMemDCLogo, 0, 0, SRCAND);  
     SetBkMode(hMemDC, TRANSPARENT);
@@ -99,7 +100,7 @@ LRESULT CALLBACK MyWinFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
     BitBlt(hDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
-    EndPaint(hWnd, &ps);                                                   
+    EndPaint(hWnd, &ps);
     return 0;
   case WM_DESTROY:
     KillTimer(hWnd, 30);

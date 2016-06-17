@@ -6,7 +6,7 @@
 #include <stdio.h> 
 #include <conio.h> 
 
-#define MAX 50 
+#define MAX 30 
 
 double A[MAX][MAX], sum; 
 int P[MAX], N; 
@@ -105,7 +105,7 @@ void main( void )
   int i; 
   char *M[] = 
   { 
-  "mat1.txt", "mat2.txt", "mat3.txt", "mat4.txt"
+    "m1.txt"
   }; 
 
   for (i = 0; i < N; i++) 

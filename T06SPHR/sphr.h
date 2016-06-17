@@ -17,5 +17,7 @@
 
 
 VOID DrawSphere( HDC hDC, INT X, INT Y, INT R);
+LoadSphere();
+
 
 #endif 

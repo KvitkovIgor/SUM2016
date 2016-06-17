@@ -72,7 +72,7 @@ extern UINT IK3_RndPrg;
 /* Materials array */
 #define IK3_MAX_MATERIALS 10000
 extern ik3MTL IK3_RndMaterials[IK3_MAX_MATERIALS];
-extern INT IK3_RndNumOfMaterials;
+extern INT IK3_RndNumOfMaterials, IK3_MouseWheel;
 
 /* Setup projection function.
  * ARGUMENTS: None.
@@ -138,7 +138,6 @@ VOID IK3_Reasize( INT W, INT H );
 VOID IK3_AnimRender( VOID );
 VOID IK3_AnimDoExit( VOID );
 ik3UNIT * IK3_AnimUnitCreate( INT Size );
-VOID IK3_AnimFlipFullScreen( VOID );
 VOID IK3_RndShaderFree( UINT Prg );
 UINT IK3_RndShaderLoad( CHAR *FileNamePrefix );
 

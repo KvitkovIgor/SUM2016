@@ -105,7 +105,7 @@ static VOID IK3_UnitResponse( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
  */
 static VOID IK3_UnitRender( ik3UNIT_CUBE *Uni, ik3Anim *Ani )
 {
-  IK3_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.1F, 0.1F, 0.1F)),
+  IK3_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.6F, 0.6F, 0.6F)),
                      MatrMulMatr(MatrRotateY((Uni->TimerSpeed * Ani->Time) * 30 + Uni->TimerShift),
                                  MatrTranslate(VecAddVec(Uni->Pos,
                                                          VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3)))));
